@@ -1,18 +1,23 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject private var viewModel = HomeViewModel()
+    @State private var showCreateDeal = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     // Promoted Section
-                    VStack(alignment: .leading) {
-                        Text("🔥 Promoted")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                        
-                        PromotedDealCard()
+                    if let promoted = viewModel.promotedDeal {
+                        VStack(alignment: .leading) {
+                            Text("🔥 Promoted")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
+                            
+                            PromotedDealCard(deal: promoted)
+                        }
                     }
                     
                     // Friends Activity
@@ -23,11 +28,12 @@ struct HomeView: View {
                             .foregroundColor(.gray)
                         
                         VStack(spacing: 0) {
-                            ActivityRow(name: "Alex", action: "claimed 🍔 Burger Deal", initial: "A")
-                            Divider()
-                            ActivityRow(name: "Sarah", action: "joined a Study Session", initial: "S")
-                            Divider()
-                            ActivityRow(name: "Mike", action: "found 🎬 Cinema Deal", initial: "M")
+                            ForEach(viewModel.recentActivity) { activity in
+                                ActivityRow(name: activity.name, action: activity.action, initial: activity.initial)
+                                if activity.id != viewModel.recentActivity.last?.id {
+                                    Divider()
+                                }
+                            }
                         }
                         .background(Color.white)
                         .cornerRadius(12)
@@ -40,23 +46,16 @@ struct HomeView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.gray)
                         
-                        DealCard(
-                            title: "🎬 Cinema Ticket",
-                            originalPrice: "$100",
-                            discountedPrice: "$65",
-                            discount: "-35%",
-                            distance: "0.8km",
-                            expiry: "Expires in 3 days"
-                        )
-                        
-                        DealCard(
-                            title: "☕ Coffee 20% Off",
-                            originalPrice: "$20",
-                            discountedPrice: "$16",
-                            discount: "-20%",
-                            distance: "0.5km",
-                            expiry: "Valid until weekend"
-                        )
+                        ForEach(viewModel.nearbyDeals) { deal in
+                            DealCard(
+                                title: "\(deal.category.icon) \(deal.title)",
+                                originalPrice: formatPrice(deal.originalPrice),
+                                discountedPrice: formatPrice(deal.discountedPrice),
+                                discount: deal.discountPercentage.map { "-\($0)%" } ?? "",
+                                distance: "0.5km",
+                                expiry: formatExpiry(deal.expiresAt)
+                            )
+                        }
                     }
                 }
                 .padding()
@@ -66,16 +65,45 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 12) {
+                        Button(action: { showCreateDeal = true }) {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                        }
                         Image(systemName: "bell")
                         Image(systemName: "person.circle")
                     }
                 }
             }
+            .sheet(isPresented: $showCreateDeal) {
+                CreateDealView()
+            }
+            .refreshable {
+                await viewModel.loadData()
+            }
+        }
+    }
+    
+    private func formatPrice(_ price: Double?) -> String {
+        guard let price = price else { return "$--" }
+        return String(format: "$%.2f", price)
+    }
+    
+    private func formatExpiry(_ date: Date?) -> String {
+        guard let date = date else { return "No expiry" }
+        let days = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
+        if days == 0 {
+            return "Expires today"
+        } else if days == 1 {
+            return "Expires tomorrow"
+        } else {
+            return "Expires in \(days) days"
         }
     }
 }
 
 struct PromotedDealCard: View {
+    let deal: Deal
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -89,24 +117,26 @@ struct PromotedDealCard: View {
                 
                 Spacer()
                 
-                Text("$6.99")
+                Text(String(format: "$%.2f", deal.discountedPrice))
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color(hex: "FFD700"))
                 +
-                Text(" $12")
+                Text(" \(formatPrice(deal.originalPrice))")
                     .font(.body)
                     .strikethrough()
                     .foregroundColor(.white.opacity(0.7))
             }
             
-            Text("🍔 50% Off Burger Set")
+            Text(deal.title)
                 .font(.headline)
                 .foregroundColor(.white)
             
-            Text("Just 0.3km away! Limited time")
-                .font(.subheadline)
-                .foregroundColor(.white.opacity(0.8))
+            if let location = deal.locationName {
+                Text("Just 0.3km away at \(location)! Limited time")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.8))
+            }
             
             Button(action: {}) {
                 Text("Claim Now →")
@@ -128,6 +158,11 @@ struct PromotedDealCard: View {
             )
         )
         .cornerRadius(12)
+    }
+    
+    private func formatPrice(_ price: Double?) -> String {
+        guard let price = price else { return "$--" }
+        return String(format: "$%.2f", price)
     }
 }
 

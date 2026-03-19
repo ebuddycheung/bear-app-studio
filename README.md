@@ -23,7 +23,7 @@ A social app for young people to discover local deals and find study partners.
 ### Tech Stack
 - **Frontend**: SwiftUI (iOS)
 - **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Maps**: Google Maps links (no custom map)
+- **Maps**: MapKit integration
 - **Payments**: Apple In-App Purchase
 
 ---
@@ -31,12 +31,89 @@ A social app for young people to discover local deals and find study partners.
 ## 📂 Project Structure
 
 ```
-bear-app-studio/
-├── docs/
-│   ├── PRD.md          # Product Requirements Document
-│   └── user-stories.md # User Stories
-└── README.md
+ios/DealBuddy/
+├── DealBuddyApp.swift          # App entry point
+├── Extensions/
+│   ├── AppConstants.swift      # App-wide constants & colors
+│   └── Color+Hex.swift         # Color extension for hex colors
+├── Models/
+│   ├── Deal.swift              # Deal model with categories
+│   ├── Message.swift           # Chat messages
+│   ├── Profile.swift           # User profile
+│   └── StudyPartner.swift      # Study partners & spots
+├── Services/
+│   ├── LocationManager.swift   # Location services
+│   ├── Repositories.swift      # Data repositories
+│   └── SupabaseService.swift   # Supabase client (configured)
+├── ViewModels/
+│   ├── AuthViewModel.swift     # Authentication state
+│   ├── ChatViewModel.swift     # Chat conversations
+│   ├── DiscoverViewModel.swift # Discover tab data
+│   ├── HomeViewModel.swift     # Home feed data
+│   ├── LeaderboardViewModel.swift # Leaderboard data
+│   └── ProfileViewModel.swift  # Profile data
+└── Views/
+    ├── ChatView.swift          # Chat list
+    ├── ContentView.swift       # Main content router
+    ├── CreateDealView.swift    # Create new deal form
+    ├── DealDetailView.swift    # Deal detail page
+    ├── DiscoverView.swift      # Discover tab
+    ├── FriendsView.swift       # Friends management
+    ├── HomeView.swift          # Home feed
+    ├── LeaderboardView.swift   # Leaderboards
+    ├── LoginView.swift         # Login/Signup
+    └── ProfileView.swift       # User profile
 ```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Xcode 16.0+
+- XcodeGen installed (`brew install xcodegen`)
+- Supabase account (for backend)
+
+### Setup
+1. Clone the repository
+2. Run `xcodegen` in the `ios` directory
+3. Open `DealBuddy.xcodeproj`
+4. Configure Supabase credentials in `Services/SupabaseService.swift`
+5. Run on simulator or device
+
+### Database Setup
+Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
+
+---
+
+## 📊 Development Status
+
+### Completed ✅
+- [x] Project structure setup with XcodeGen
+- [x] SwiftUI views (Home, Discover, Chat, Profile)
+- [x] Data models matching Supabase schema
+- [x] Supabase client integration (with actual API keys)
+- [x] ViewModels for all screens
+- [x] Repositories for data operations
+- [x] Location services integration
+- [x] Deal detail view with map
+- [x] Settings and Edit Profile views
+- [x] Authentication flow (Supabase)
+- [x] Friends management UI
+- [x] Leaderboard view
+- [x] **NEW** Create Deal view with form
+- [x] **NEW** Real Supabase data fetching in Home/Discover views
+- [x] **NEW** App builds successfully on iOS Simulator
+
+### In Progress 🔄
+- [ ] Connect to Supabase (need credentials)
+- [ ] Apple Sign In integration
+- [ ] Push notifications
+- [ ] Premium subscription (IAP)
+
+### Planned 📋
+- [ ] Deep linking for shared deals
+- [ ] Image upload for profiles
 
 ---
 

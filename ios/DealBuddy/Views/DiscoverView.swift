@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DiscoverView: View {
+    @StateObject private var viewModel = DiscoverViewModel()
     @State private var selectedSubTab = 0
     
     var body: some View {
@@ -23,11 +24,11 @@ struct DiscoverView: View {
                 // Content
                 ScrollView {
                     if selectedSubTab == 0 {
-                        DealsContent()
+                        DealsContent(deals: viewModel.deals)
                     } else if selectedSubTab == 1 {
-                        PartnersContent()
+                        PartnersContent(partners: viewModel.partners)
                     } else {
-                        SpotsContent()
+                        SpotsContent(spots: viewModel.spots)
                     }
                 }
             }
@@ -37,6 +38,9 @@ struct DiscoverView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(systemName: "person.circle")
                 }
+            }
+            .refreshable {
+                await viewModel.loadData()
             }
         }
     }
@@ -62,25 +66,26 @@ struct SubTabButton: View {
 }
 
 struct DealsContent: View {
+    let deals: [Deal]
+    
     var body: some View {
         VStack(spacing: 12) {
-            DiscoverDealCard(
-                title: "🍜 Ramen Special",
-                originalPrice: "$45",
-                discountedPrice: "$28",
-                location: "Central",
-                distance: "0.4km"
-            )
-            
-            DiscoverDealCard(
-                title: "🍕 Pizza Combo",
-                originalPrice: "$55",
-                discountedPrice: "$35",
-                location: "Wan Chai",
-                distance: "1.2km"
-            )
+            ForEach(deals) { deal in
+                DiscoverDealCard(
+                    title: "\(deal.category.icon) \(deal.title)",
+                    originalPrice: formatPrice(deal.originalPrice),
+                    discountedPrice: formatPrice(deal.discountedPrice),
+                    location: deal.locationName ?? "Unknown",
+                    distance: "0.5km"
+                )
+            }
         }
         .padding()
+    }
+    
+    private func formatPrice(_ price: Double?) -> String {
+        guard let price = price else { return "$--" }
+        return String(format: "$%.2f", price)
     }
 }
 
@@ -134,6 +139,8 @@ struct DiscoverDealCard: View {
 }
 
 struct PartnersContent: View {
+    let partners: [StudyPartner]
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("📚 Find Study Partners")
@@ -142,26 +149,16 @@ struct PartnersContent: View {
                 .foregroundColor(.gray)
                 .padding(.horizontal)
             
-            PartnerCard(
-                name: "Alex T.",
-                subjects: "Math, Physics",
-                university: "HKU",
-                initial: "A"
-            )
-            
-            PartnerCard(
-                name: "Sarah L.",
-                subjects: "English, History",
-                university: "CUHK",
-                initial: "S"
-            )
-            
-            PartnerCard(
-                name: "Mike C.",
-                subjects: "CS, Data",
-                university: "PolyU",
-                initial: "M"
-            )
+            ForEach(partners) { partner in
+                if let profile = partner.profile {
+                    PartnerCard(
+                        name: profile.name ?? "Unknown",
+                        subjects: partner.subjects.joined(separator: ", "),
+                        university: profile.university ?? "Unknown",
+                        initial: String(profile.name?.prefix(1) ?? "U")
+                    )
+                }
+            }
         }
         .padding()
     }
@@ -209,6 +206,8 @@ struct PartnerCard: View {
 }
 
 struct SpotsContent: View {
+    let spots: [StudySpot]
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("☕ Study Spots")
@@ -217,28 +216,27 @@ struct SpotsContent: View {
                 .foregroundColor(.gray)
                 .padding(.horizontal)
             
-            SpotCard(
-                name: "Starbucks Central",
-                details: "WiFi • Power outlets • Quiet",
-                distance: "0.3km",
-                icon: "☕"
-            )
-            
-            SpotCard(
-                name: "Central Library",
-                details: "Free WiFi • Silent zone",
-                distance: "0.6km",
-                icon: "📚"
-            )
-            
-            SpotCard(
-                name: "Cozy Corner Cafe",
-                details: "WiFi • Great food • Cozy",
-                distance: "0.8km",
-                icon: "🍜"
-            )
+            ForEach(spots) { spot in
+                SpotCard(
+                    name: spot.name,
+                    details: spot.amenities.joined(separator: " • "),
+                    distance: "0.5km",
+                    icon: getIconForSpot(spot.name)
+                )
+            }
         }
         .padding()
+    }
+    
+    private func getIconForSpot(_ name: String) -> String {
+        let lowercaseName = name.lowercased()
+        if lowercaseName.contains("starbucks") || lowercaseName.contains("coffee") || lowercaseName.contains("cafe") {
+            return "☕"
+        } else if lowercaseName.contains("library") {
+            return "📚"
+        } else {
+            return "🍜"
+        }
     }
 }
 

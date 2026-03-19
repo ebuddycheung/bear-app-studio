@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @Binding var isLoggedIn: Bool
+    @StateObject private var viewModel = ProfileViewModel()
     @State private var showLogoutAlert = false
     
     var body: some View {
@@ -16,42 +17,76 @@ struct ProfileView: View {
                                 .frame(width: 80, height: 80)
                                 .overlay(Text("🧑").font(.largeTitle))
                             
-                            Circle()
-                                .fill(Color(hex: "FFD700"))
-                                .frame(width: 24, height: 24)
-                                .overlay(Text("P").font(.caption2).fontWeight(.bold).foregroundColor(.black))
-                                .offset(x: 4, y: 4)
+                            if viewModel.profile?.isPremium == true {
+                                Circle()
+                                    .fill(Color(hex: "FFD700"))
+                                    .frame(width: 24, height: 24)
+                                    .overlay(Text("P").font(.caption2).fontWeight(.bold).foregroundColor(.black))
+                                    .offset(x: 4, y: 4)
+                            }
                         }
                         
-                        Text("John Doe")
+                        Text(viewModel.profile?.name ?? "User")
                             .font(.title2)
                             .fontWeight(.bold)
                         
-                        Text("🎓 Hong Kong University")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+                        if let university = viewModel.profile?.university {
+                            Text("🎓 \(university)")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                        
+                        if let bio = viewModel.profile?.bio {
+                            Text(bio)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        }
                     }
                     .padding(.top, 24)
                     
                     // Stats
                     HStack(spacing: 40) {
-                        StatItem(value: "12", label: "Deals")
-                        StatItem(value: "5", label: "Sessions")
-                        StatItem(value: "8", label: "Friends")
+                        StatItem(value: "\(viewModel.stats.deals)", label: "Deals")
+                        StatItem(value: "\(viewModel.stats.sessions)", label: "Sessions")
+                        StatItem(value: "\(viewModel.stats.friends)", label: "Friends")
                     }
                     
-                    // Links (Premium)
-                    HStack(spacing: 16) {
-                        LinkButton(icon: "📸", text: "@johndoe")
-                        LinkButton(icon: "🐦", text: "@johndt")
-                        LinkButton(icon: "💼", text: "portfolio.com")
+                    // Premium Badge
+                    if viewModel.profile?.isPremium == true {
+                        HStack {
+                            Image(systemName: "star.fill")
+                                .foregroundColor(Color(hex: "FFD700"))
+                            Text("Premium Member")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color(hex: "FFD700"))
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Color(hex: "004E89").opacity(0.1))
+                        .cornerRadius(20)
                     }
                     
                     // Settings & Logout
                     VStack(spacing: 12) {
-                        Button(action: {}) {
+                        NavigationLink(destination: SettingsView()) {
                             HStack {
                                 Text("⚙️ Settings")
+                                    .font(.headline)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                            .foregroundColor(Color(hex: "FF6B35"))
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
+                        }
+                        
+                        NavigationLink(destination: EditProfileView(profile: viewModel.profile)) {
+                            HStack {
+                                Text("✏️ Edit Profile")
                                     .font(.headline)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -85,7 +120,10 @@ struct ProfileView: View {
             .alert("Logout", isPresented: $showLogoutAlert) {
                 Button("Cancel", role: .cancel) {}
                 Button("Logout", role: .destructive) {
-                    isLoggedIn = false
+                    Task {
+                        await viewModel.logout()
+                        isLoggedIn = false
+                    }
                 }
             } message: {
                 Text("Are you sure you want to logout?")
@@ -112,17 +150,72 @@ struct StatItem: View {
     }
 }
 
-struct LinkButton: View {
-    let icon: String
-    let text: String
+// MARK: - Settings View
+struct SettingsView: View {
+    @State private var notificationsEnabled = true
+    @State private var locationEnabled = true
+    @State private var darkModeEnabled = false
     
     var body: some View {
-        HStack(spacing: 4) {
-            Text(icon)
-            Text(text)
-                .font(.caption)
+        List {
+            Section("Notifications") {
+                Toggle("Push Notifications", isOn: $notificationsEnabled)
+                Toggle("Location Services", isOn: $locationEnabled)
+            }
+            
+            Section("Appearance") {
+                Toggle("Dark Mode", isOn: $darkModeEnabled)
+            }
+            
+            Section("About") {
+                HStack {
+                    Text("Version")
+                    Spacer()
+                    Text("1.0.0")
+                        .foregroundColor(.gray)
+                }
+                
+                NavigationLink("Privacy Policy", destination: Text("Privacy Policy"))
+                NavigationLink("Terms of Service", destination: Text("Terms of Service"))
+            }
         }
-        .foregroundColor(Color(hex: "004E89"))
+        .navigationTitle("Settings")
+    }
+}
+
+// MARK: - Edit Profile View
+struct EditProfileView: View {
+    let profile: Profile?
+    @State private var name: String = ""
+    @State private var university: String = ""
+    @State private var bio: String = ""
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        Form {
+            Section("Basic Info") {
+                TextField("Name", text: $name)
+                TextField("University", text: $university)
+            }
+            
+            Section("Bio") {
+                TextEditor(text: $bio)
+                    .frame(minHeight: 100)
+            }
+            
+            Section {
+                Button("Save Changes") {
+                    // TODO: Save changes
+                    dismiss()
+                }
+            }
+        }
+        .navigationTitle("Edit Profile")
+        .onAppear {
+            name = profile?.name ?? ""
+            university = profile?.university ?? ""
+            bio = profile?.bio ?? ""
+        }
     }
 }
 

@@ -157,8 +157,8 @@
 **So that** I can see their activity
 
 **Acceptance Criteria:**
-- [ ] User can search for friends by name
-- [ ] User can send friend request
+- [x] User can search for friends by name
+- [x] User can send friend request
 - [ ] Friend request appears for recipient
 - [ ] Once accepted, both see each other's activity
 
@@ -168,8 +168,8 @@
 **So that** I stay connected
 
 **Feed shows:**
-- [ ] Friends' claimed deals
-- [ ] Friends' study sessions
+- [x] Friends' claimed deals
+- [x] Friends' study sessions
 
 ### US-016: View Leaderboard
 **As a** user  
@@ -177,8 +177,8 @@
 **So that** I can compete with friends
 
 **Acceptance Criteria:**
-- [ ] Shows top deal hunters (most claims)
-- [ ] Shows top study streaks
+- [x] Shows top deal hunters (most claims)
+- [x] Shows top study streaks
 
 ---
 
