@@ -2,33 +2,58 @@
 
 > iOS Apps with Subscription Model - Teddy & Ching's Business
 
-## Business Plan
+## 📱 Our First App: DealBuddy
 
-### 1. Mission Statement
-<!-- What problem are we solving? Who are we serving? -->
+A social app for young people to discover local deals and find study partners.
 
-### 2. Product Strategy
-- **Free Tier**: 
-- **Paid Tier (Pro)**:
-- **Revenue Model**:
+### Problem
+- Young users want to save money but don't know where to find deals
+- Finding study partners is hard and time-consuming
+- Existing solutions are fragmented
 
-### 3. First App Idea
-<!-- What's our first app? What problem does it solve? -->
+### Solution
+- **Deals Module**: Browse local discounts, claim deals, share with friends
+- **Study Buddy**: Find study partners, discover study spots
+- **Social**: Friends activity, leaderboards
 
-### 4. Target Audience
-<!-- Who are our users? -->
+### Monetization
+- **Free**: Basic profile (1 photo)
+- **Premium ($2.99-4.99/mo)**: Multiple photos, custom links, premium badge 🅿️
 
-### 5. Competitive Advantage
-<!-- What makes us different? -->
+### Tech Stack
+- **Frontend**: SwiftUI (iOS)
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Maps**: Google Maps links (no custom map)
+- **Payments**: Apple In-App Purchase
 
-### 6. Financial Goals
-- Monthly recurring revenue target:
-- Timeline to first paid subscriber:
+---
 
-### 7. Next Steps
-- [ ] 
-- [ ] 
-- [ ] 
+## 📂 Project Structure
+
+```
+bear-app-studio/
+├── docs/
+│   ├── PRD.md          # Product Requirements Document
+│   └── user-stories.md # User Stories
+└── README.md
+```
+
+---
+
+## 📊 Business Plan (Draft)
+
+### Target Audience
+- University/college students (18-25)
+- Young professionals (21-28)
+
+### Revenue Model
+- Monthly subscription (Apple IAP)
+- 70% Apple / 30% us
+
+### Success Metrics
+- 1,000 downloads in Month 1
+- 20% DAU
+- 2-5% conversion to premium
 
 ---
 
