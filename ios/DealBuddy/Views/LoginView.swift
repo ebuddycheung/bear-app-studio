@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @State private var email = ""
@@ -173,6 +174,34 @@ struct LoginView: View {
                         }
                     }
                 }
+                
+                // Divider
+                HStack {
+                    Rectangle()
+                        .fill(Color(.systemGray4))
+                        .frame(height: 1)
+                    
+                    Text("or")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                    
+                    Rectangle()
+                        .fill(Color(.systemGray4))
+                        .frame(height: 1)
+                }
+                .padding(.vertical, 8)
+                
+                // Apple Sign In Button
+                SignInWithAppleButton(.signIn) { request in
+                    request.requestedScopes = [.fullName, .email]
+                } onCompletion: { result in
+                    Task {
+                        await authViewModel.signInWithApple()
+                    }
+                }
+                .signInWithAppleButtonStyle(.black)
+                .frame(height: 50)
+                .cornerRadius(10)
                 
                 Spacer()
             }

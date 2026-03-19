@@ -28,6 +28,8 @@ targets:
     dependencies:
       - package: Supabase
         product: Supabase
+      - sdk: StoreKit.framework
+      - sdk: PhotosUI.framework
     settings:
       base:
         INFOPLIST_FILE: DealBuddy/Info.plist

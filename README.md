@@ -104,12 +104,13 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 - [x] **NEW** Create Deal view with form
 - [x] **NEW** Real Supabase data fetching in Home/Discover views
 - [x] **NEW** App builds successfully on iOS Simulator
+- [x] **NEW** Apple Sign In integration
+- [x] **NEW** Premium subscription (IAP) with StoreKit 2
 
 ### In Progress 🔄
 - [ ] Connect to Supabase (need credentials)
-- [ ] Apple Sign In integration
 - [ ] Push notifications
-- [ ] Premium subscription (IAP)
+- [ ] Deep linking for shared deals
 
 ### Planned 📋
 - [ ] Deep linking for shared deals

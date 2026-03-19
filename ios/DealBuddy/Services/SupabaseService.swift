@@ -7,6 +7,12 @@ struct SupabaseCredentials {
     static let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlhamp0bmFwZXR2dXZhZHlsZ2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MDE3NTUsImV4cCI6MjA4OTQ3Nzc1NX0.bqUxgZ1ATFCK1jqRBKXEcnpCKWg7ymnyEF0JEFPYxjU"
 }
 
+// MARK: - OAuth Provider
+enum OAuthProvider: String {
+    case apple = "apple"
+    case google = "google"
+}
+
 // MARK: - Supabase Client
 final class SupabaseService {
     static let shared = SupabaseService()
@@ -42,6 +48,35 @@ final class SupabaseService {
     
     var currentSession: Session? {
         client.auth.currentSession
+    }
+    
+    // MARK: - OAuth Sign In (Apple, Google)
+    func signInWithOAuth(provider: OAuthProvider) async throws -> Session {
+        // Build the OAuth URL for the provider
+        let redirectURL = "dealbuddy://oauth-callback"
+        
+        let session: Session = try await client.auth.signInWithOAuth(
+            provider: provider.rawValue,
+            options: SignInWithOAuthOptions(
+                redirectTo: URL(string: redirectURL)
+            )
+        )
+        
+        return session
+    }
+    
+    // MARK: - Get User Info from OAuth
+    func getOAuthUserInfo() async throws -> (id: String, email: String?, name: String?)? {
+        guard let session = currentSession else { return nil }
+        
+        // Get user details from the provider
+        let user = session.user
+        
+        // Try to get name from user metadata
+        let name = user.userMetadata?["full_name"] as? String 
+            ?? user.userMetadata?["name"] as? String
+        
+        return (id: user.id.uuidString, email: user.email, name: name)
     }
 }
 

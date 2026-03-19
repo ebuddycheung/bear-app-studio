@@ -140,6 +140,7 @@ struct DiscoverDealCard: View {
 
 struct PartnersContent: View {
     let partners: [StudyPartner]
+    @State private var selectedPartner: StudyPartner?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -150,17 +151,20 @@ struct PartnersContent: View {
                 .padding(.horizontal)
             
             ForEach(partners) { partner in
-                if let profile = partner.profile {
-                    PartnerCard(
-                        name: profile.name ?? "Unknown",
-                        subjects: partner.subjects.joined(separator: ", "),
-                        university: profile.university ?? "Unknown",
-                        initial: String(profile.name?.prefix(1) ?? "U")
-                    )
+                PartnerCard(
+                    name: partner.name,
+                    subjects: partner.subjects.joined(separator: ", "),
+                    university: partner.university,
+                    initial: String(partner.name.prefix(1))
+                ) {
+                    selectedPartner = partner
                 }
             }
         }
         .padding()
+        .fullScreenCover(item: $selectedPartner) { partner in
+            StudyPartnerRequestView(partner: partner)
+        }
     }
 }
 
@@ -169,6 +173,7 @@ struct PartnerCard: View {
     let subjects: String
     let university: String
     let initial: String
+    let onConnect: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
@@ -188,7 +193,7 @@ struct PartnerCard: View {
             
             Spacer()
             
-            Button(action: {}) {
+            Button(action: onConnect) {
                 Text("Connect")
                     .font(.caption)
                     .fontWeight(.medium)

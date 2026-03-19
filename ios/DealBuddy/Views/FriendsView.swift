@@ -14,6 +14,11 @@ struct FriendsView: View {
                         .foregroundColor(.gray)
                     TextField("Search friends...", text: $searchText)
                         .textFieldStyle(.plain)
+                        .onChange(of: searchText) { _, newValue in
+                            Task {
+                                await viewModel.searchUsers(query: newValue)
+                            }
+                        }
                 }
                 .padding(12)
                 .background(Color(.systemGray6))
@@ -39,7 +44,11 @@ struct FriendsView: View {
                     if selectedTab == 0 {
                         FriendsListContent(friends: viewModel.friends, emptyMessage: "No friends yet", emptyIcon: "person.2")
                     } else if selectedTab == 1 {
-                        RequestsContent(requests: viewModel.pendingRequests)
+                        RequestsContent(requests: viewModel.pendingRequests, onAccept: { request in
+                            viewModel.acceptRequest(request)
+                        }, onDecline: { request in
+                            viewModel.declineRequest(request)
+                        })
                     } else {
                         FindFriendsContent(users: viewModel.searchResults, searchText: searchText) { user in
                             viewModel.sendFriendRequest(to: user)
@@ -98,6 +107,8 @@ struct FriendsListContent: View {
 
 struct RequestsContent: View {
     let requests: [FriendRequest]
+    let onAccept: (FriendRequest) -> Void
+    let onDecline: (FriendRequest) -> Void
     
     var body: some View {
         if requests.isEmpty {
@@ -112,7 +123,7 @@ struct RequestsContent: View {
         } else {
             LazyVStack(spacing: 0) {
                 ForEach(requests) { request in
-                    RequestRow(request: request)
+                    RequestRow(request: request, onAccept: { onAccept(request) }, onDecline: { onDecline(request) })
                 }
             }
         }
@@ -182,6 +193,8 @@ struct FriendRow: View {
 
 struct RequestRow: View {
     let request: FriendRequest
+    let onAccept: () -> Void
+    let onDecline: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
@@ -205,7 +218,7 @@ struct RequestRow: View {
             Spacer()
             
             HStack(spacing: 8) {
-                Button(action: {}) {
+                Button(action: onAccept) {
                     Image(systemName: "checkmark")
                         .foregroundColor(.white)
                         .padding(8)
@@ -213,7 +226,7 @@ struct RequestRow: View {
                         .clipShape(Circle())
                 }
                 
-                Button(action: {}) {
+                Button(action: onDecline) {
                     Image(systemName: "xmark")
                         .foregroundColor(.white)
                         .padding(8)

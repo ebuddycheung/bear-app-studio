@@ -42,5 +42,28 @@
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>DealBuddy needs access to your photo library to let you choose profile photos.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>DealBuddy needs access to your camera to take profile photos.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>DealBuddy uses your location to show nearby deals and study spots.</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>dealbuddy</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>com.dealbuddy.app</string>
+        </dict>
+    </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>oauth</string>
+        <string>auth0</string>
+        <string>googlesamples</string>
+    </array>
 </dict>
 </plist>
