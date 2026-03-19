@@ -141,6 +141,7 @@ struct DiscoverDealCard: View {
 struct PartnersContent: View {
     let partners: [StudyPartner]
     @State private var selectedPartner: StudyPartner?
+    @State private var showRequestSheet = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -152,18 +153,21 @@ struct PartnersContent: View {
             
             ForEach(partners) { partner in
                 PartnerCard(
-                    name: partner.name,
+                    name: partner.profile?.name ?? "Unknown",
                     subjects: partner.subjects.joined(separator: ", "),
-                    university: partner.university,
-                    initial: String(partner.name.prefix(1))
+                    university: partner.profile?.university ?? "Unknown",
+                    initial: String((partner.profile?.name ?? "U").prefix(1))
                 ) {
                     selectedPartner = partner
+                    showRequestSheet = true
                 }
             }
         }
         .padding()
-        .fullScreenCover(item: $selectedPartner) { partner in
-            StudyPartnerRequestView(partner: partner)
+        .sheet(isPresented: $showRequestSheet) {
+            if let partner = selectedPartner {
+                StudyPartnerRequestView(partner: partner)
+            }
         }
     }
 }

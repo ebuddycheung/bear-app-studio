@@ -56,10 +56,8 @@ final class SupabaseService {
         let redirectURL = "dealbuddy://oauth-callback"
         
         let session: Session = try await client.auth.signInWithOAuth(
-            provider: provider.rawValue,
-            options: SignInWithOAuthOptions(
-                redirectTo: URL(string: redirectURL)
-            )
+            provider: .init(rawValue: provider.rawValue)!,
+            redirectTo: URL(string: redirectURL)
         )
         
         return session
@@ -73,8 +71,8 @@ final class SupabaseService {
         let user = session.user
         
         // Try to get name from user metadata
-        let name = user.userMetadata?["full_name"] as? String 
-            ?? user.userMetadata?["name"] as? String
+        let name = user.userMetadata["full_name"] as? String 
+            ?? user.userMetadata["name"] as? String
         
         return (id: user.id.uuidString, email: user.email, name: name)
     }

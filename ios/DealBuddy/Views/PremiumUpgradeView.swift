@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 struct PremiumUpgradeView: View {
     @StateObject private var iapService = IAPService.shared
@@ -145,7 +146,7 @@ struct PricingCard: View {
     @StateObject private var iapService = IAPService.shared
     
     private var isYearly: Bool {
-        product.productIdentifier == ProductIdentifier.yearly.rawValue
+        product.id == ProductIdentifier.yearly.rawValue
     }
     
     var body: some View {
@@ -166,11 +167,11 @@ struct PricingCard: View {
             
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(product.displayName)
+                    Text(isYearly ? "Premium Yearly" : "Premium Monthly")
                         .font(.headline)
                     
-                    if let period = product.periodString {
-                        Text(period)
+                    if isYearly {
+                        Text("Best value!")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -180,7 +181,7 @@ struct PricingCard: View {
                 
                 Button(action: onPurchase) {
                     HStack(spacing: 4) {
-                        Text(product.priceString)
+                        Text(product.price.description)
                             .fontWeight(.bold)
                         Image(systemName: "chevron.right")
                             .font(.caption)

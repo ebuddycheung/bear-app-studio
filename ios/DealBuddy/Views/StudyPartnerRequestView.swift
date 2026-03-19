@@ -13,21 +13,24 @@ struct StudyPartnerRequestView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     // Partner Card
+                    let partnerName = partner.profile?.name ?? "Unknown"
+                    let partnerUniversity = partner.profile?.university ?? "Unknown"
+                    
                     HStack(spacing: 16) {
                         Circle()
                             .fill(Color(hex: "004E89"))
                             .frame(width: 60, height: 60)
                             .overlay(
-                                Text(partner.name.prefix(1).uppercased())
+                                Text(partnerName.prefix(1).uppercased())
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
                             )
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(partner.name)
+                            Text(partnerName)
                                 .font(.headline)
-                            Text(partner.university)
+                            Text(partnerUniversity)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             if partner.isAvailable {
@@ -112,7 +115,7 @@ struct StudyPartnerRequestView: View {
                     dismiss()
                 }
             } message: {
-                Text("Your study request has been sent to \(partner.name)")
+                Text("Your study request has been sent to \(partner.profile?.name ?? "Unknown")")
             }
         }
     }
@@ -154,10 +157,10 @@ struct SubjectChip: View {
     StudyPartnerRequestView(partner: StudyPartner(
         id: UUID(),
         userId: UUID(),
-        name: "Alex Chen",
-        university: "HKU",
+        profile: nil,
         subjects: ["Math", "Physics", "Computer Science"],
         availability: "Weekdays",
-        isAvailable: true
+        isAvailable: true,
+        createdAt: Date()
     ))
 }

@@ -67,20 +67,15 @@ final class IAPService: ObservableObject {
         listener?.cancel()
     }
     
-    // MARK: - Fetch Products
+    // MARK: - Fetch Products (StoreKit 2)
     func fetchProducts() async {
         isLoading = true
         errorMessage = nil
         
         do {
             let productIds = ProductIdentifier.allCases.map { $0.rawValue }
-            let request = SKProductsRequest(productIdentifiers: Set(productIds))
-            let response = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<SKProductsResponse, Error>) in
-                request.delegate = ProductsRequestDelegate(continuation: continuation)
-                request.start()
-            }
-            
-            products = response.products.sorted { $0.price.doubleValue < $1.price.doubleValue }
+            let storeProducts = try await Product.products(for: productIds)
+            products = storeProducts.sorted { $0.price < $1.price }
         } catch {
             errorMessage = "Failed to load products: \(error.localizedDescription)"
         }
@@ -99,20 +94,16 @@ final class IAPService: ObservableObject {
             switch result {
             case .success(let verification):
                 let transaction = try checkVerified(verification)
-                await updatePurchasedIds()
                 await transaction.finish()
+                purchasedProductIds.insert(product.id)
                 isLoading = false
                 return true
-                
             case .userCancelled:
                 isLoading = false
                 return false
-                
             case .pending:
                 isLoading = false
-                errorMessage = "Purchase is pending approval"
                 return false
-                
             @unknown default:
                 isLoading = false
                 return false
@@ -128,107 +119,50 @@ final class IAPService: ObservableObject {
     func restorePurchases() async {
         isLoading = true
         
-        do {
-            try await AppStore.sync()
-            await updatePurchasedIds()
-        } catch {
-            errorMessage = "Failed to restore: \(error.localizedDescription)"
+        for await result in Transaction.currentEntitlements {
+            if let transaction = try? checkVerified(result) {
+                purchasedProductIds.insert(transaction.productID)
+            }
         }
         
         isLoading = false
     }
     
-    // MARK: - Check Premium Status
+    // MARK: - Check if Premium
     var isPremium: Bool {
         !purchasedProductIds.isEmpty
     }
     
-    // MARK: - Private Helpers
-    private func listenForTransactions() -> Task<Void, Error> {
-        return Task.detached {
+    // MARK: - Listen for Transactions
+    func listenForTransactions() -> Task<Void, Error> {
+        Task.detached {
             for await result in Transaction.updates {
-                do {
-                    let transaction = try self.checkVerified(result)
-                    await self.updatePurchasedIds()
-                    await transaction.finish()
-                } catch {
-                    print("Transaction verification failed: \(error)")
-                }
+                await self.handleTransaction(result)
             }
         }
     }
     
-    private func updatePurchasedIds() async {
-        var ids = Set<String>()
-        
-        for await result in Transaction.currentEntitlements {
-            if case .verified(let transaction) = result {
-                ids.insert(transaction.productID)
-            }
-        }
-        
-        await MainActor.run {
-            self.purchasedProductIds = ids
+    private func handleTransaction(_ result: VerificationResult<Transaction>) async {
+        do {
+            let transaction = try self.checkVerified(result)
+            await transaction.finish()
+            self.purchasedProductIds.insert(transaction.productID)
+        } catch {
+            print("Transaction verification failed: \(error)")
         }
     }
     
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         switch result {
         case .unverified:
-            throw IAPError.verificationFailed
-        case .verified(let signedType):
-            return signedType
+            throw StoreKitError.verificationFailed
+        case .verified(let safe):
+            return safe
         }
     }
 }
 
-// MARK: - IAP Error
-enum IAPError: LocalizedError {
+// MARK: - StoreKit Errors
+enum StoreKitError: Error {
     case verificationFailed
-    case purchaseFailed
-    
-    var errorDescription: String? {
-        switch self {
-        case .verificationFailed: return "Purchase verification failed"
-        case .purchaseFailed: return "Purchase failed"
-        }
-    }
-}
-
-// MARK: - Products Request Delegate
-private class ProductsRequestDelegate: NSObject, SKProductsRequestDelegate {
-    private let continuation: CheckedContinuation<SKProductsResponse, Error>
-    
-    init(continuation: CheckedContinuation<SKProductsResponse, Error>) {
-        self.continuation = continuation
-    }
-    
-    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        continuation.resume(returning: response)
-    }
-    
-    func request(_ request: SKRequest, didFailWithError error: Error) {
-        continuation.resume(throwing: error)
-    }
-}
-
-// MARK: - Product Extension
-extension Product {
-    var priceString: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = priceFormatLocale
-        return formatter.string(from: price) ?? "\(price)"
-    }
-    
-    var periodString: String? {
-        switch productIdentifier {
-        case ProductIdentifier.monthly.rawValue:
-            return "per month"
-        case ProductIdentifier.yearly.rawValue:
-            return "per year"
-        default:
-            return nil
-        }
-    }
 }

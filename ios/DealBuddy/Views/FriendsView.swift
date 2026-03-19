@@ -14,7 +14,7 @@ struct FriendsView: View {
                         .foregroundColor(.gray)
                     TextField("Search friends...", text: $searchText)
                         .textFieldStyle(.plain)
-                        .onChange(of: searchText) { _, newValue in
+                        .onChange(of: searchText) { newValue in
                             Task {
                                 await viewModel.searchUsers(query: newValue)
                             }
