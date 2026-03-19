@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Binding var isLoggedIn: Bool
+    @State private var showLogoutAlert = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -44,24 +47,49 @@ struct ProfileView: View {
                         LinkButton(icon: "💼", text: "portfolio.com")
                     }
                     
-                    // Settings
-                    Button(action: {}) {
-                        HStack {
-                            Text("⚙️ Settings")
-                                .font(.headline)
-                            Spacer()
-                            Image(systemName: "chevron.right")
+                    // Settings & Logout
+                    VStack(spacing: 12) {
+                        Button(action: {}) {
+                            HStack {
+                                Text("⚙️ Settings")
+                                    .font(.headline)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                            .foregroundColor(Color(hex: "FF6B35"))
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
                         }
-                        .foregroundColor(Color(hex: "FF6B35"))
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(12)
+                        
+                        Button(action: {
+                            showLogoutAlert = true
+                        }) {
+                            HStack {
+                                Text("🚪 Logout")
+                                    .font(.headline)
+                                Spacer()
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                            }
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
+                        }
                     }
                     .padding(.horizontal)
                 }
             }
             .background(Color(hex: "F7F7F7"))
             .navigationTitle("Profile")
+            .alert("Logout", isPresented: $showLogoutAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Logout", role: .destructive) {
+                    isLoggedIn = false
+                }
+            } message: {
+                Text("Are you sure you want to logout?")
+            }
         }
     }
 }
@@ -99,5 +127,5 @@ struct LinkButton: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(isLoggedIn: .constant(true))
 }

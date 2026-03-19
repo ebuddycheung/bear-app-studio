@@ -4,6 +4,7 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var isLoggedIn = false
+    @State private var showLogoutAlert = false
     
     var body: some View {
         NavigationStack {
@@ -78,13 +79,44 @@ struct LoginView: View {
                 Spacer()
             }
             .padding()
-            .navigationDestination(isPresented: $isLoggedIn) {
-                ContentView()
+            .fullScreenCover(isPresented: $isLoggedIn) {
+                MainTabView(isLoggedIn: $isLoggedIn)
             }
         }
     }
 }
 
-#Preview {
-    LoginView()
+// Main Tab View with Logout
+struct MainTabView: View {
+    @Binding var isLoggedIn: Bool
+    @State private var selectedTab = 0
+    
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+                .tag(0)
+            
+            DiscoverView()
+                .tabItem {
+                    Label("Discover", systemImage: "magnifyingglass")
+                }
+                .tag(1)
+            
+            ChatView()
+                .tabItem {
+                    Label("Chat", systemImage: "message.fill")
+                }
+                .tag(2)
+            
+            ProfileView(isLoggedIn: $isLoggedIn)
+                .tabItem {
+                    Label("Profile", systemImage: "person.fill")
+                }
+                .tag(3)
+        }
+        .tint(Color(hex: "FF6B35"))
+    }
 }
