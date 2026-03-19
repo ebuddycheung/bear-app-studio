@@ -1,5 +1,22 @@
 import Foundation
 
+// MARK: - Profile Photo
+struct ProfilePhoto: Identifiable, Codable {
+    let id: UUID
+    let userId: UUID
+    let photoUrl: String
+    var sortOrder: Int
+    var createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case photoUrl = "photo_url"
+        case sortOrder = "sort_order"
+        case createdAt = "created_at"
+    }
+}
+
 // MARK: - User Profile
 struct Profile: Identifiable, Codable {
     let id: UUID
@@ -9,6 +26,8 @@ struct Profile: Identifiable, Codable {
     var university: String?
     var bio: String?
     var avatarUrl: String?
+    var photos: [ProfilePhoto]?
+    var links: [ProfileLink]?
     var isPremium: Bool
     var createdAt: Date
 
@@ -16,6 +35,7 @@ struct Profile: Identifiable, Codable {
         case id, email, name, university, bio
         case userId = "user_id"
         case avatarUrl = "avatar_url"
+        case photos, links
         case isPremium = "is_premium"
         case createdAt = "created_at"
     }
@@ -56,7 +76,7 @@ enum LinkPlatform: String, Codable, CaseIterable {
         switch self {
         case .instagram: return "📸"
         case .twitter: return "🐦"
-        case .portfolio: return "💼"
+        case .portfolio: return "🌐"
         case .linkedin: return "💼"
         }
     }

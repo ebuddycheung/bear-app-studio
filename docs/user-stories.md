@@ -8,10 +8,10 @@
 **So that** I can access the app
 
 **Acceptance Criteria:**
-- [ ] User can enter email and password
-- [ ] Password must be at least 6 characters
-- [ ] User receives confirmation on successful signup
-- [ ] User is directed to profile setup
+- [x] User can enter email and password
+- [x] Password must be at least 6 characters
+- [x] User receives confirmation on successful signup
+- [x] User is directed to profile setup
 
 ### US-002: Sign In
 **As a** registered user  
@@ -19,9 +19,9 @@
 **So that** I can access my account
 
 **Acceptance Criteria:**
-- [ ] User can enter email and password
-- [ ] Invalid credentials show error message
-- [ ] Successful login redirects to home
+- [x] User can enter email and password
+- [x] Invalid credentials show error message
+- [x] Successful login redirects to home
 
 ---
 
@@ -33,10 +33,10 @@
 **So that** others can identify me
 
 **Acceptance Criteria:**
-- [ ] User can enter name (required)
-- [ ] User can enter university/school (optional)
-- [ ] User can upload 1 profile photo
-- [ ] Profile is saved on completion
+- [x] User can enter name (required)
+- [x] User can enter university/school (optional)
+- [x] User can upload 1 profile photo
+- [x] Profile is saved on completion
 
 ### US-004: View Own Profile
 **As a** user  
@@ -44,9 +44,9 @@
 **So that** I can see how others see me
 
 **Acceptance Criteria:**
-- [ ] Profile shows name, university, bio
-- [ ] Shows profile photo
-- [ ] Shows premium badge if subscribed
+- [x] Profile shows name, university, bio
+- [x] Shows profile photo
+- [x] Shows premium badge if subscribed
 
 ### US-005: Edit Profile
 **As a** user  
@@ -54,10 +54,10 @@
 **So that** I can keep it updated
 
 **Acceptance Criteria:**
-- [ ] User can change name
-- [ ] User can change university
-- [ ] User can change bio
-- [ ] User can change profile photo
+- [x] User can change name
+- [x] User can change university
+- [x] User can change bio
+- [x] User can change profile photo
 
 ### US-006: Upgrade to Premium
 **As a** free user  
@@ -65,10 +65,10 @@
 **So that** I can add multiple photos and links
 
 **Acceptance Criteria:**
-- [ ] User can see premium features in settings
-- [ ] User can initiate subscription via Apple IAP
-- [ ] Payment is processed
-- [ ] Premium badge appears on profile
+- [x] User can see premium features in settings
+- [x] User can initiate subscription via Apple IAP
+- [x] Payment is processed
+- [x] Premium badge appears on profile
 
 ---
 
@@ -80,9 +80,9 @@
 **So that** I can find discounts
 
 **Acceptance Criteria:**
-- [ ] Deals are shown in a scrollable list
-- [ ] Each deal shows: title, original price, discounted price, category
-- [ ] Deals are sorted by distance (nearest first)
+- [x] Deals are shown in a scrollable list
+- [x] Each deal shows: title, original price, discounted price, category
+- [x] Deals are sorted by distance (nearest first)
 
 ### US-008: View Deal Details
 **As a** user  
@@ -90,10 +90,10 @@
 **So that** I can decide if I want to claim it
 
 **Acceptance Criteria:**
-- [ ] Shows full description
-- [ ] Shows expiry date/time
-- [ ] Shows location (address)
-- [ ] "Open in Maps" button links to Google Maps
+- [x] Shows full description
+- [x] Shows expiry date/time
+- [x] Shows location (address)
+- [x] "Open in Maps" button links to Google Maps
 
 ### US-009: Claim a Deal
 **As a** user  
@@ -101,9 +101,9 @@
 **So that** my friends can see I'm using it
 
 **Acceptance Criteria:**
-- [ ] User can tap "Claim" button
-- [ ] Deal is saved to "My Claims"
-- [ ] Claim appears in friends' activity feed
+- [x] User can tap "Claim" button
+- [x] Deal is saved to "My Claims"
+- [x] Claim appears in friends' activity feed
 
 ### US-010: Filter Deals
 **As a** user  
@@ -111,8 +111,8 @@
 **So that** I can find relevant deals faster
 
 **Acceptance Criteria:**
-- [ ] Filter options: All, Food, Drinks, Entertainment
-- [ ] Selecting a filter updates the list
+- [x] Filter options: All, Food, Drinks, Entertainment
+- [x] Selecting a filter updates the list
 
 ---
 
@@ -124,9 +124,9 @@
 **So that** I can find someone to study with
 
 **Acceptance Criteria:**
-- [ ] List shows users with: name, university, subject
-- [ ] Shows if user is available now
-- [ ] Can tap to view full profile
+- [x] List shows users with: name, university, subject
+- [x] Shows if user is available now
+- [x] Can tap to view full profile
 
 ### US-012: Request Study Connection
 **As a** user  
@@ -134,9 +134,9 @@
 **So that** we can potentially study together
 
 **Acceptance Criteria:**
-- [ ] User can tap "Request to Study"
-- [ ] Request is sent to target user
-- [ ] Target user receives notification (or sees in app)
+- [x] User can tap "Request to Study"
+- [x] Request is sent to target user
+- [x] Target user receives notification (or sees in app)
 
 ### US-013: View Study Spots
 **As a** user  
@@ -144,8 +144,8 @@
 **So that** I can find a place to study
 
 **Acceptance Criteria:**
-- [ ] List shows: name, address, WiFi info
-- [ ] "Open in Maps" button links to Google Maps
+- [x] List shows: name, address, WiFi info
+- [x] "Open in Maps" button links to Google Maps
 
 ---
 
@@ -159,8 +159,8 @@
 **Acceptance Criteria:**
 - [x] User can search for friends by name
 - [x] User can send friend request
-- [ ] Friend request appears for recipient
-- [ ] Once accepted, both see each other's activity
+- [x] Friend request appears for recipient
+- [x] Once accepted, both see each other's activity
 
 ### US-015: View Activity Feed
 **As a** user  
@@ -190,8 +190,9 @@
 **So that** I can showcase more of myself
 
 **Acceptance Criteria:**
-- [ ] Can add up to 5 photos
-- [ ] Photos display in profile gallery
+- [x] Can add up to 5 photos
+- [x] Photos display in profile gallery
+- [x] Can delete photos
 
 ### US-018: Add Custom Links (Premium)
 **As a** premium user  
@@ -199,8 +200,8 @@
 **So that** others can find my social media
 
 **Acceptance Criteria:**
-- [ ] Can add links: Instagram, Twitter, Portfolio, etc.
-- [ ] Links appear clickable on profile
+- [x] Can add links: Instagram, Twitter, Portfolio, etc.
+- [x] Links appear clickable on profile
 
 ---
 
@@ -212,9 +213,9 @@
 **So that** I can manage my account
 
 **Acceptance Criteria:**
-- [ ] View/Edit Profile
-- [ ] Subscription Status
-- [ ] Sign Out
+- [x] View/Edit Profile
+- [x] Subscription Status
+- [x] Sign Out
 - [ ] Delete Account (optional v1)
 
 ---

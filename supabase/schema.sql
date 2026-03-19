@@ -92,6 +92,15 @@ CREATE TABLE IF NOT EXISTS profile_links (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 9. Profile Photos Table (for premium users - up to 5 photos)
+CREATE TABLE IF NOT EXISTS profile_photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(user_id) ON DELETE CASCADE,
+  photo_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Enable Row Level Security
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE deals ENABLE ROW LEVEL SECURITY;
@@ -101,6 +110,7 @@ ALTER TABLE study_spots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE friends ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profile_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profile_photos ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies (basic)
 -- Profiles: Users can read all, update own
@@ -109,5 +119,17 @@ CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.
 
 -- Deals: Everyone can read
 CREATE POLICY "Deals are viewable by everyone" ON deals FOR SELECT USING (true);
+
+-- Profile Links: Everyone can read, users can update own
+CREATE POLICY "Public profile links are viewable by everyone" ON profile_links FOR SELECT USING (true);
+CREATE POLICY "Users can update own profile links" ON profile_links FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own profile links" ON profile_links FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can delete own profile links" ON profile_links FOR DELETE USING (auth.uid() = user_id);
+
+-- Profile Photos: Everyone can read, users can update own
+CREATE POLICY "Public profile photos are viewable by everyone" ON profile_photos FOR SELECT USING (true);
+CREATE POLICY "Users can update own profile photos" ON profile_photos FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own profile photos" ON profile_photos FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can delete own profile photos" ON profile_photos FOR DELETE USING (auth.uid() = user_id);
 
 -- Add your own policies as needed

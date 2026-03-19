@@ -42,7 +42,27 @@ final class ProfileViewModel: ObservableObject {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601
                 
-                let fetchedProfile = try decoder.decode(Profile.self, from: response.data)
+                var fetchedProfile = try decoder.decode(Profile.self, from: response.data)
+                
+                // Fetch profile photos
+                let photosResponse = try await SupabaseService.shared.client.from("profile_photos")
+                    .select()
+                    .eq("user_id", value: uid.uuidString)
+                    .order("sort_order")
+                    .execute()
+                
+                let photos = try decoder.decode([ProfilePhoto].self, from: photosResponse.data)
+                fetchedProfile.photos = photos
+                
+                // Fetch profile links
+                let linksResponse = try await SupabaseService.shared.client.from("profile_links")
+                    .select()
+                    .eq("user_id", value: uid.uuidString)
+                    .execute()
+                
+                let links = try decoder.decode([ProfileLink].self, from: linksResponse.data)
+                fetchedProfile.links = links
+                
                 profile = fetchedProfile
                 isLoggedIn = true
             } else {
@@ -84,6 +104,95 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Photo Management
+    
+    func uploadPhoto(_ imageData: Data, sortOrder: Int) async throws -> ProfilePhoto {
+        guard let userId = SupabaseService.shared.currentUser?.id else {
+            throw NSError(domain: "Profile", code: 401, userInfo: [NSLocalizedDescriptionKey: "Not logged in"])
+        }
+        
+        let fileName = "\(userId.uuidString)/\(UUID().uuidString).jpg"
+        
+        // Upload to Supabase Storage
+        let _ = try await SupabaseService.shared.client.storage
+            .from("profile-photos")
+            .upload(fileName, data: imageData, options: FileOptions(contentType: "image/jpeg"))
+        
+        // Get public URL
+        let publicUrl = try SupabaseService.shared.client.storage
+            .from("profile-photos")
+            .getPublicURL(path: fileName)
+        
+        // Save to database
+        let photoInsert = PhotoUpload(
+            userId: userId.uuidString,
+            photoUrl: publicUrl.absoluteString,
+            sortOrder: sortOrder
+        )
+        
+        let response = try await SupabaseService.shared.client.from("profile_photos")
+            .insert(photoInsert)
+            .select()
+            .single()
+            .execute()
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let photo = try decoder.decode(ProfilePhoto.self, from: response.data)
+        
+        // Refresh profile
+        await loadProfile()
+        
+        return photo
+    }
+    
+    func deletePhoto(_ photoId: UUID) async throws {
+        guard SupabaseService.shared.currentUser?.id != nil else {
+            throw NSError(domain: "Profile", code: 401, userInfo: [NSLocalizedDescriptionKey: "Not logged in"])
+        }
+        
+        // Delete from database
+        try await SupabaseService.shared.client.from("profile_photos")
+            .delete()
+            .eq("id", value: photoId.uuidString)
+            .execute()
+        
+        // Refresh profile
+        await loadProfile()
+    }
+    
+    // MARK: - Link Management
+    
+    func saveLinks(_ links: [EditableLink]) async throws {
+        guard let userId = SupabaseService.shared.currentUser?.id else {
+            throw NSError(domain: "Profile", code: 401, userInfo: [NSLocalizedDescriptionKey: "Not logged in"])
+        }
+        
+        // Delete existing links
+        try await SupabaseService.shared.client.from("profile_links")
+            .delete()
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+        
+        // Insert new links
+        let linkInserts = links.filter { !$0.url.isEmpty }.map { link in
+            LinkInsert(
+                userId: userId.uuidString,
+                platform: link.platform.rawValue,
+                url: link.url
+            )
+        }
+        
+        if !linkInserts.isEmpty {
+            try await SupabaseService.shared.client.from("profile_links")
+                .insert(linkInserts)
+                .execute()
+        }
+        
+        // Refresh profile
+        await loadProfile()
+    }
+    
     private func loadMockData() {
         profile = Profile(
             id: UUID(),
@@ -113,4 +222,30 @@ struct ProfileUpdate: Codable {
     var name: String?
     var university: String?
     var bio: String?
+}
+
+// MARK: - Photo Upload
+struct PhotoUpload: Codable {
+    let userId: String
+    let photoUrl: String
+    let sortOrder: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case photoUrl = "photo_url"
+        case sortOrder = "sort_order"
+    }
+}
+
+// MARK: - Link Insert
+struct LinkInsert: Codable {
+    let userId: String
+    let platform: String
+    let url: String
+    
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case platform
+        case url
+    }
 }

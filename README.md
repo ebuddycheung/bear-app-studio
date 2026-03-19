@@ -102,18 +102,18 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 - [x] Authentication flow (Supabase)
 - [x] Friends management UI
 - [x] Leaderboard view
-- [x] **NEW** Create Deal view with form
-- [x] **NEW** Real Supabase data fetching in Home/Discover views
-- [x] **NEW** App builds successfully on iOS Simulator
-- [x] **NEW** Apple Sign In integration
-- [x] **NEW** Premium subscription (IAP) with StoreKit 2
-- [x] **NEW** Chat detail view with message bubbles
+- [x] Create Deal view with form
+- [x] Real Supabase data fetching in Home/Discover views
+- [x] App builds successfully on iOS Simulator
+- [x] Apple Sign In integration
+- [x] Premium subscription (IAP) with StoreKit 2
+- [x] Chat detail view with message bubbles
+- [x] **PREMIUM** Multiple photo upload (up to 5) with Supabase Storage
+- [x] **PREMIUM** Custom social links (Instagram, Twitter, LinkedIn, Portfolio)
 
 ### In Progress 🔄
-- [ ] Connect to Supabase (need credentials)
 - [ ] Push notifications
 - [ ] Deep linking for shared deals
-- [ ] Image upload for profiles
 
 ### Planned 📋
 - [ ] Deep linking for shared deals
