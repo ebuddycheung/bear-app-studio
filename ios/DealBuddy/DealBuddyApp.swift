@@ -4,7 +4,7 @@ import SwiftUI
 struct DealBuddyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }

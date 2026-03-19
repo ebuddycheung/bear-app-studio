@@ -13,6 +13,7 @@
 		A92FA82CB65D41BEA5976904 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67680D4E4A1171D80E944C0 /* ChatView.swift */; };
 		C45AEFB186DC072DC76E6601 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D7ED8226E83C7375216C9A /* HomeView.swift */; };
 		D1FDD44ACAA6310035091514 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679B4E54D738A52900C32017 /* ContentView.swift */; };
+		EE090240C599F3576B821CDC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A392939D98C5BF5D46A778 /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		679B4E54D738A52900C32017 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		81AA52494D3EEB4F8E2CA4CD /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		B5B23F8182DA9F7DFA0FD3AA /* DealBuddy.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DealBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7A392939D98C5BF5D46A778 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		E67680D4E4A1171D80E944C0 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		ED69898A6EC0B5825E802D14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FEE430309A8B8068D8E524E8 /* DealBuddyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealBuddyApp.swift; sourceTree = "<group>"; };
@@ -49,6 +51,7 @@
 				E67680D4E4A1171D80E944C0 /* ChatView.swift */,
 				81AA52494D3EEB4F8E2CA4CD /* DiscoverView.swift */,
 				60D7ED8226E83C7375216C9A /* HomeView.swift */,
+				D7A392939D98C5BF5D46A778 /* LoginView.swift */,
 				44797AC1486B7D92F6D3C4D1 /* ProfileView.swift */,
 			);
 			path = Views;
@@ -129,6 +132,7 @@
 				58862FBB6015F89EFE94B554 /* DealBuddyApp.swift in Sources */,
 				6B84669DEF8C5883327C494C /* DiscoverView.swift in Sources */,
 				C45AEFB186DC072DC76E6601 /* HomeView.swift in Sources */,
+				EE090240C599F3576B821CDC /* LoginView.swift in Sources */,
 				3A030CF7850C3EC35C343BB9 /* ProfileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
