@@ -53,11 +53,19 @@ final class ChatViewModel: ObservableObject {
 }
 
 // MARK: - Conversation
-struct Conversation: Identifiable {
+struct Conversation: Identifiable, Hashable {
     let id: UUID
     let participantName: String
     let participantInitial: String
     let lastMessage: String
     let timeAgo: String
     let unreadCount: Int
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Conversation, rhs: Conversation) -> Bool {
+        lhs.id == rhs.id
+    }
 }

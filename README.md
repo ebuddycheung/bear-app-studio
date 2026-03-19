@@ -54,6 +54,7 @@ ios/DealBuddy/
 │   └── ProfileViewModel.swift  # Profile data
 └── Views/
     ├── ChatView.swift          # Chat list
+    ├── ChatDetailView.swift    # Chat conversation detail
     ├── ContentView.swift       # Main content router
     ├── CreateDealView.swift    # Create new deal form
     ├── DealDetailView.swift    # Deal detail page
@@ -106,15 +107,16 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 - [x] **NEW** App builds successfully on iOS Simulator
 - [x] **NEW** Apple Sign In integration
 - [x] **NEW** Premium subscription (IAP) with StoreKit 2
+- [x] **NEW** Chat detail view with message bubbles
 
 ### In Progress 🔄
 - [ ] Connect to Supabase (need credentials)
 - [ ] Push notifications
 - [ ] Deep linking for shared deals
+- [ ] Image upload for profiles
 
 ### Planned 📋
 - [ ] Deep linking for shared deals
-- [ ] Image upload for profiles
 
 ---
 

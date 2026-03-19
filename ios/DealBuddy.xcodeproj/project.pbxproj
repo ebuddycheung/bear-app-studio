@@ -17,6 +17,7 @@
 		399144729E02F9891C4431E2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28F3F5DA84C7F695A34786C /* ContentView.swift */; };
 		3A030CF7850C3EC35C343BB9 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44797AC1486B7D92F6D3C4D1 /* ProfileView.swift */; };
 		4003BAD09CF1897177BA614F /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA683B43B0BA2F1721E04EF1 /* AppConstants.swift */; };
+		45AFB5380BC01523013C4C6D /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7431BDF2D27A57343B8DF2 /* ChatDetailView.swift */; };
 		4BE43ACF7F15E2F9A4FB3AEC /* DealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9D4D88ABEB2914BB919C0 /* DealDetailView.swift */; };
 		4F500396EE7D1FBA1008DD9B /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769A1DAD1A4530FB82D4F230 /* AuthViewModel.swift */; };
 		58862FBB6015F89EFE94B554 /* DealBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE430309A8B8068D8E524E8 /* DealBuddyApp.swift */; };
@@ -79,6 +80,7 @@
 		E67680D4E4A1171D80E944C0 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9AF9CB17D0B53D30A2968B2 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		ED69898A6EC0B5825E802D14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		ED7431BDF2D27A57343B8DF2 /* ChatDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailView.swift; sourceTree = "<group>"; };
 		F9732A6207932E56BA9A86B7 /* StudyPartnerRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPartnerRequestView.swift; sourceTree = "<group>"; };
 		FA3ADF1BC78ACE2F1AA366EE /* LeaderboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardViewModel.swift; sourceTree = "<group>"; };
 		FA683B43B0BA2F1721E04EF1 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 		8A6B7BE127E663792A9AFC05 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED7431BDF2D27A57343B8DF2 /* ChatDetailView.swift */,
 				E67680D4E4A1171D80E944C0 /* ChatView.swift */,
 				B28F3F5DA84C7F695A34786C /* ContentView.swift */,
 				A77E8EAF5356A735F43F0EF7 /* CreateDealView.swift */,
@@ -283,6 +286,7 @@
 			files = (
 				4003BAD09CF1897177BA614F /* AppConstants.swift in Sources */,
 				4F500396EE7D1FBA1008DD9B /* AuthViewModel.swift in Sources */,
+				45AFB5380BC01523013C4C6D /* ChatDetailView.swift in Sources */,
 				A92FA82CB65D41BEA5976904 /* ChatView.swift in Sources */,
 				CA60E5421A99D1AE3382ADCA /* ChatViewModel.swift in Sources */,
 				8BB23EAED0FFF386B02D2497 /* Color+Hex.swift in Sources */,
