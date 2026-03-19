@@ -3,6 +3,7 @@ import SwiftUI
 struct ChatView: View {
     @StateObject private var viewModel = ChatViewModel()
     @State private var selectedConversation: Conversation?
+    @State private var navigateToDetail = false
     
     var body: some View {
         NavigationStack {
@@ -29,6 +30,7 @@ struct ChatView: View {
                                     conversation: conversation,
                                     onTap: {
                                         selectedConversation = conversation
+                                        navigateToDetail = true
                                     }
                                 )
                                 Divider()
@@ -43,7 +45,7 @@ struct ChatView: View {
             .refreshable {
                 await viewModel.loadData()
             }
-            .navigationDestination(isPresented: .constant(selectedConversation != nil)) {
+            .navigationDestination(isPresented: $navigateToDetail) {
                 if let conversation = selectedConversation {
                     ChatDetailView(conversation: conversation)
                 }
