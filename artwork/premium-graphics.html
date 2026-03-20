@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealBuddy Premium Graphics</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+            --premium-gold: #c9a227;
+            --premium-purple: #7c5cbf;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .artwork-title {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .artwork-subtitle {
+            color: var(--anthropic-mid-gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .artwork-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .artwork-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--anthropic-dark);
+        }
+
+        .canvas-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+            background: white;
+        }
+
+        .canvas-container canvas {
+            display: block;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+            margin-top: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .control-group label {
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 100px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: var(--anthropic-light-gray);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--premium-gold);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--anthropic-mid-gray);
+            min-width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="artwork-title">✨ DealBuddy Premium Graphics</h1>
+        <p class="artwork-subtitle">Warm, premium visuals for DealBuddy's premium features</p>
+        
+        <div class="artwork-grid">
+            <div class="artwork-item">
+                <h3>Premium Badge</h3>
+                <div id="premium-badge-canvas" class="canvas-container"></div>
+            </div>
+            <div class="artwork-item">
+                <h3>Premium Upgrade Screen</h3>
+                <div id="premium-upgrade-canvas" class="canvas-container"></div>
+            </div>
+            <div class="artwork-item">
+                <h3>Deal Claim Success</h3>
+                <div id="deal-success-canvas" class="canvas-container"></div>
+            </div>
+            <div class="artwork-item">
+                <h3>Friendship Connection</h3>
+                <div id="friendship-canvas" class="canvas-container"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Animation Speed</label>
+                <input type="range" id="speed" min="1" max="50" step="1" value="25">
+                <span class="value-display" id="speed-value">25</span>
+            </div>
+            <div class="control-group">
+                <label>Particle Count</label>
+                <input type="range" id="particles" min="20" max="200" step="10" value="80">
+                <span class="value-display" id="particles-value">80</span>
+            </div>
+            <div class="control-group">
+                <label>Seed</label>
+                <input type="range" id="seed" min="1" max="1000" step="1" value="42">
+                <span class="value-display" id="seed-value">42</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DealBuddy Premium Graphics - "Warm Emergence" Philosophy
+        // Premium feels: luxurious but welcoming, golden but warm
+
+        let params = {
+            speed: 25,
+            particles: 80,
+            seed: 42
+        };
+
+        // Color palettes
+        const premiumGold = '#c9a227';
+        const premiumPurple = '#7c5cbf';
+        const warmOrange = '#d97757';
+        const softGreen = '#788c5d';
+        const lightCream = '#faf9f5';
+        const charcoal = '#141413';
+
+        // Four p5 instances for different graphics
+        let badgeSketch, upgradeSketch, successSketch, friendshipSketch;
+
+        // Badge Canvas
+        const badgeCanvas = new p5((p) => {
+            let t = 0;
+            
+            p.setup = () => {
+                let canvas = p.createCanvas(300, 300);
+                canvas.parent('premium-badge-canvas');
+                p.frameRate(30);
+            };
+
+            p.draw = () => {
+                p.randomSeed(params.seed);
+                p.noiseSeed(params.seed);
+                
+                // Warm cream background
+                p.background(250, 249, 245);
+                
+                // Draw premium badge - glowing circle with "P"
+                let cx = p.width / 2;
+                let cy = p.height / 2;
+                
+                // Outer glow
+                let glowSize = 120 + p.sin(t * 0.02) * 10;
+                for (let i = 5; i > 0; i--) {
+                    let alpha = 20 - i * 3;
+                    p.fill(201, 162, 39, alpha);
+                    p.noStroke();
+                    p.ellipse(cx, cy, glowSize + i * 20);
+                }
+                
+                // Main circle
+                p.fill(201, 162, 39);
+                p.ellipse(cx, cy, glowSize);
+                
+                // Inner circle
+                p.fill(255, 248, 230);
+                p.ellipse(cx, cy, glowSize * 0.7);
+                
+                // "P" letter
+                p.fill(201, 162, 39);
+                p.textSize(100);
+                p.textAlign(p.CENTER, p.CENTER);
+                p.textStyle(p.BOLD);
+                p.text('P', cx, cy - 5);
+                
+                // Sparkle effects
+                drawSparkles(p, cx, cy, glowSize, t);
+                
+                t += params.speed * 0.01;
+            };
+
+            function drawSparkles(p, cx, cy, radius, time) {
+                p.randomSeed(params.seed + Math.floor(time * 0.1));
+                for (let i = 0; i < 8; i++) {
+                    let angle = (p.TWO_PI / 8) * i + time * 0.01;
+                    let r = radius * 0.6 + p.sin(time * 0.05 + i) * 20;
+                    let x = cx + p.cos(angle) * r;
+                    let y = cy + p.sin(angle) * r;
+                    let size = 3 + p.sin(time * 0.1 + i) * 2;
+                    
+                    p.fill(255, 255, 255, 200);
+                    p.noStroke();
+                    drawStar(p, x, y, size, size * 0.4, 4);
+                }
+            }
+
+            function drawStar(p, x, y, radius1, radius2, npoints) {
+                let angle = p.TWO_PI / npoints;
+                let halfAngle = angle / 2.0;
+                p.beginShape();
+                for (let a = 0; a < p.TWO_PI; a += angle) {
+                    let sx = x + p.cos(a) * radius2;
+                    let sy = y + p.sin(a) * radius2;
+                    p.vertex(sx, sy);
+                    sx = x + p.cos(a + halfAngle) * radius1;
+                    sy = y + p.sin(a + halfAngle) * radius1;
+                    p.vertex(sx, sy);
+                }
+                p.endShape(p.CLOSE);
+            }
+        });
+
+        // Premium Upgrade Canvas
+        const upgradeCanvas = new p5((p) => {
+            let t = 0;
+            
+            p.setup = () => {
+                let canvas = p.createCanvas(400, 500);
+                canvas.parent('premium-upgrade-canvas');
+                p.frameRate(30);
+            };
+
+            p.draw = () => {
+                p.randomSeed(params.seed);
+                p.noiseSeed(params.seed);
+                
+                // Gradient background
+                let c1 = p.color(250, 249, 245);
+                let c2 = p.color(255, 248, 240);
+                for (let y = 0; y < p.height; y++) {
+                    let inter = p.map(y, 0, p.height, 0, 1);
+                    let c = p.lerpColor(c1, c2, inter);
+                    p.stroke(c);
+                    p.line(0, y, p.width, y);
+                }
+                
+                // Floating particles
+                drawParticles(p, t, premiumGold, 0.3);
+                drawParticles(p, t + 100, premiumPurple, 0.2);
+                
+                // Main content area
+                let cx = p.width / 2;
+                let cy = p.height / 2 - 30;
+                
+                // Card background
+                p.fill(255, 255, 255, 240);
+                p.noStroke();
+                p.drawingContext.shadowBlur = 20;
+                p.drawingContext.shadowColor = 'rgba(201, 162, 39, 0.2)';
+                p.roundRect(50, 120, 300, 340, 20);
+                p.drawingContext.shadowBlur = 0;
+                
+                // Crown icon
+                drawCrown(p, cx, 180, t);
+                
+                // "Premium" text
+                p.fill(201, 162, 39);
+                p.textSize(32);
+                p.textAlign(p.CENTER, p.CENTER);
+                p.textStyle(p.BOLD);
+                p.text('Premium', cx, 240);
+                
+                // Benefits
+                p.fill(100, 100, 100);
+                p.textSize(14);
+                p.textStyle(p.NORMAL);
+                let benefits = ['Multiple Photos', 'Custom Links', 'Premium Badge', 'Early Access'];
+                for (let i = 0; i < benefits.length; i++) {
+                    p.text('✓ ' + benefits[i], cx, 290 + i * 30);
+                }
+                
+                // Price
+                p.fill(201, 162, 39);
+                p.textSize(28);
+                p.textStyle(p.BOLD);
+                p.text('$2.99/mo', cx, 420);
+                
+                t += params.speed * 0.01;
+            };
+
+            function drawParticles(p, time, col, alpha) {
+                p.randomSeed(params.seed + Math.floor(time));
+                for (let i = 0; i < params.particles / 4; i++) {
+                    let x = p.random(p.width);
+                    let y = p.random(p.height);
+                    let size = p.random(2, 6);
+                    let pulse = p.sin(time * 0.05 + i) * 0.5 + 0.5;
+                    
+                    let c = p.color(col);
+                    c.setAlpha(alpha * 255 * pulse);
+                    p.fill(c);
+                    p.noStroke();
+                    p.ellipse(x, y, size * pulse);
+                }
+            }
+
+            function drawCrown(p, x, y, time) {
+                p.push();
+                p.translate(x, y);
+                
+                // Crown body
+                p.fill(201, 162, 39);
+                p.noStroke();
+                p.beginShape();
+                p.vertex(-40, 30);
+                p.vertex(-40, 0);
+                p.vertex(-20, -20);
+                p.vertex(0, 0);
+                p.vertex(20, -20);
+                p.vertex(40, 0);
+                p.vertex(40, 30);
+                p.endShape(p.CLOSE);
+                
+                // Jewels
+                let pulse = p.sin(time * 0.1) * 0.2 + 0.8;
+                p.fill(124, 92, 191, 255 * pulse);
+                p.ellipse(-20, 10, 12);
+                p.fill(201, 162, 39);
+                p.ellipse(0, 15, 15);
+                p.fill(124, 92, 191, 255 * pulse);
+                p.ellipse(20, 10, 12);
+                
+                // Sparkle
+                p.fill(255, 255, 255, 200 * pulse);
+                p.ellipse(0, -30 + p.sin(time * 0.15) * 5, 8);
+                
+                p.pop();
+            }
+        });
+
+        // Deal Success Canvas
+        const successCanvas = new p5((p) => {
+            let t = 0;
+            
+            p.setup = () => {
+                let canvas = p.createCanvas(400, 400);
+                canvas.parent('deal-success-canvas');
+                p.frameRate(30);
+            };
+
+            p.draw = () => {
+                p.randomSeed(params.seed);
+                p.noiseSeed(params.seed);
+                
+                p.background(250, 249, 245);
+                
+                // Confetti particles
+                drawConfetti(p, t);
+                
+                let cx = p.width / 2;
+                let cy = p.height / 2;
+                
+                // Success circle
+                let pulse = p.sin(t * 0.05) * 10;
+                p.fill(120, 140, 93);
+                p.ellipse(cx, cy, 150 + pulse);
+                
+                p.fill(255);
+                p.ellipse(cx, cy, 130 + pulse);
+                
+                // Checkmark
+                p.stroke(120, 140, 93);
+                p.strokeWeight(12);
+                p.line(cx - 35, cy, cx - 5, cy + 25);
+                p.line(cx - 5, cy + 25, cx + 45, cy - 25);
+                
+                // Text
+                p.noStroke();
+                p.fill(20, 20, 19);
+                p.textSize(24);
+                p.textAlign(p.CENTER, p.CENTER);
+                p.textStyle(p.BOLD);
+                p.text('Deal Claimed!', cx, cy + 110);
+                
+                p.fill(150, 150, 150);
+                p.textSize(14);
+                p.textStyle(p.NORMAL);
+                p.text('You saved money!', cx, cy + 140);
+                
+                t += params.speed * 0.02;
+            };
+
+            function drawConfetti(p, time) {
+                p.randomSeed(params.seed + Math.floor(time * 0.1));
+                let colors = [premiumGold, warmOrange, softGreen, premiumPurple, '#6a9bcc'];
+                
+                for (let i = 0; i < params.particles; i++) {
+                    let x = p.random(p.width);
+                    let y = p.random(p.height);
+                    let size = p.random(5, 12);
+                    let rotation = p.random(p.TWO_PI);
+                    let speed = p.random(0.5, 2);
+                    
+                    p.push();
+                    p.translate(x, (y + time * speed * 0.5) % (p.height + 20) - 10);
+                    p.rotate(rotation + time * 0.02);
+                    
+                    let col = p.color(p.random(colors));
+                    col.setAlpha(200);
+                    p.fill(col);
+                    p.noStroke();
+                    p.rect(-size/2, -size/4, size, size/2);
+                    p.pop();
+                }
+            }
+        });
+
+        // Friendship Canvas
+        const friendshipCanvas = new p5((p) => {
+            let t = 0;
+            
+            p.setup = () => {
+                let canvas = p.createCanvas(400, 400);
+                canvas.parent('friendship-canvas');
+                p.frameRate(30);
+            };
+
+            p.draw = () => {
+                p.randomSeed(params.seed);
+                p.noiseSeed(params.seed);
+                
+                p.background(250, 249, 245);
+                
+                let cx = p.width / 2;
+                let cy = p.height / 2;
+                
+                // Connection lines
+                drawConnections(p, cx, cy, t);
+                
+                // User avatars (circles with initials)
+                let angle1 = t * 0.01;
+                let angle2 = t * 0.01 + p.PI;
+                
+                let x1 = cx + p.cos(angle1) * 100;
+                let y1 = cy + p.sin(angle1) * 80;
+                let x2 = cx + p.cos(angle2) * 100;
+                let y2 = cy + p.sin(angle2) * 80;
+                
+                // Avatar 1 (You)
+                drawAvatar(p, x1, y1, 'Y', '#6a9bcc', t);
+                
+                // Avatar 2 (Friend)
+                drawAvatar(p, x2, y2, 'F', '#788c5d', t);
+                
+                // Heart in middle
+                drawHeart(p, cx, cy, t);
+                
+                t += params.speed * 0.015;
+            };
+
+            function drawConnections(p, cx, cy, time) {
+                p.stroke(200, 200, 200, 100);
+                p.strokeWeight(2);
+                
+                // Draw curved connection paths
+                for (let i = 0; i < 5; i++) {
+                    let offset = p.sin(time * 0.05 + i) * 10;
+                    p.noFill();
+                    p.bezier(
+                        cx - 100, cy,
+                        cx - 50 + offset, cy - 60 + i * 20,
+                        cx + 50 - offset, cy + 60 - i * 20,
+                        cx + 100, cy
+                    );
+                }
+            }
+
+            function drawAvatar(p, x, y, initial, col, time) {
+                // Glow
+                let pulse = p.sin(time * 0.1) * 5;
+                p.fill(p.red(p.color(col)), p.green(p.color(col)), p.blue(p.color(col)), 30);
+                p.noStroke();
+                p.ellipse(x, y, 80 + pulse);
+                
+                // Circle
+                p.fill(col);
+                p.ellipse(x, y, 60);
+                
+                // Initial
+                p.fill(255);
+                p.textSize(28);
+                p.textAlign(p.CENTER, p.CENTER);
+                p.textStyle(p.BOLD);
+                p.text(initial, x, y);
+            }
+
+            function drawHeart(p, x, y, time) {
+                let scale = 1 + p.sin(time * 0.1) * 0.1;
+                p.push();
+                p.translate(x, y);
+                p.scale(scale);
+                
+                p.fill(217, 119, 87);
+                p.noStroke();
+                
+                // Heart shape
+                p.beginShape();
+                for (let a = 0; a < p.TWO_PI; a += 0.1) {
+                    let r = 20;
+                    let hx = r * 16 * p.pow(p.sin(a), 3) / 15;
+                    let hy = -r * (13 * p.cos(a) - 5 * p.cos(2*a) - 2 * p.cos(3*a) - p.cos(4*a)) / 15;
+                    p.vertex(hx, hy);
+                }
+                p.endShape(p.CLOSE);
+                
+                // Sparkle
+                p.fill(255, 255, 255, 200);
+                p.ellipse(0, -25, 6);
+                
+                p.pop();
+            }
+        });
+
+        // Controls
+        document.getElementById('speed').addEventListener('input', function() {
+            params.speed = parseInt(this.value);
+            document.getElementById('speed-value').textContent = this.value;
+        });
+
+        document.getElementById('particles').addEventListener('input', function() {
+            params.particles = parseInt(this.value);
+            document.getElementById('particles-value').textContent = this.value;
+        });
+
+        document.getElementById('seed').addEventListener('input', function() {
+            params.seed = parseInt(this.value);
+            document.getElementById('seed-value').textContent = this.value;
+        });
+    </script>
+</body>
+</html>
