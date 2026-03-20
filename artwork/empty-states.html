@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealBuddy Empty States</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dealbuddy-warm: #FF8C42;
+            --dealbuddy-soft: #FFE5D9;
+            --dealbuddy-accent: #4ECDC4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #faf9f5 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: #141413;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            color: var(--dealbuddy-warm);
+            margin-bottom: 8px;
+        }
+        .subtitle { color: #b0aea5; margin-bottom: 24px; }
+        .state-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .state-btn {
+            background: white;
+            border: 2px solid var(--dealbuddy-soft);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .state-btn:hover, .state-btn.active {
+            background: var(--dealbuddy-warm);
+            color: white;
+            border-color: var(--dealbuddy-warm);
+        }
+        .canvas-wrapper {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(20,20,19,0.1);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .slider-group {
+            margin-bottom: 16px;
+            max-width: 400px;
+        }
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e8e6dc;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--dealbuddy-warm);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        button.action {
+            background: var(--dealbuddy-warm);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        button.action:hover { background: #e67a32; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 DealBuddy Empty States</h1>
+        <div class="subtitle">Warm, inviting illustrations for when users have no content yet</div>
+        
+        <div class="state-selector">
+            <button class="state-btn active" onclick="setState('no-deals')">No Deals Yet</button>
+            <button class="state-btn" onclick="setState('no-friends')">No Friends</button>
+            <button class="state-btn" onclick="setState('no-messages')">No Messages</button>
+            <button class="state-btn" onclick="setState('premium-locked')">Premium Locked</button>
+        </div>
+        
+        <div class="canvas-wrapper">
+            <div id="canvas-container"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="slider-group">
+                <label>Animation Speed <span id="speed-val">1.0</span></label>
+                <input type="range" id="speed" min="0" max="3" step="0.1" value="1" oninput="updateSpeed()">
+            </div>
+            <div class="slider-group">
+                <label>Particle Count <span id="particle-val">30</span></label>
+                <input type="range" id="particleCount" min="5" max="60" value="30" oninput="updateParticles()">
+            </div>
+            <div class="btn-row">
+                <button class="action" onclick="randomSeedArt()">↻ New Variation</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentState = 'no-deals';
+        let animSpeed = 1;
+        let particleCount = 30;
+        let particles = [];
+        let seed = 42;
+        
+        function setup() {
+            let canvas = createCanvas(800, 600);
+            canvas.parent('canvas-container');
+            randomSeed(seed);
+            noiseSeed(seed);
+            initParticles();
+            frameRate(30);
+        }
+        
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: random(width),
+                    y: random(height),
+                    size: random(3, 12),
+                    speed: random(0.3, 1.5) * animSpeed,
+                    angle: random(TWO_PI),
+                    drift: random(-0.5, 0.5)
+                });
+            }
+        }
+        
+        function draw() {
+            // Background gradient
+            setGradient(0, 0, width, height, color(255, 250, 245), color(250, 248, 243));
+            
+            // Draw floating particles
+            drawParticles();
+            
+            // Draw main illustration
+            push();
+            translate(width/2, height/2 - 30);
+            drawIllustration();
+            pop();
+            
+            // Draw text
+            drawText();
+        }
+        
+        function setGradient(x, y, w, h, c1, c2) {
+            noFill();
+            for (let i = y; i <= y + h; i++) {
+                let inter = map(i, y, y + h, 0, 1);
+                let c = lerpColor(c1, c2, inter);
+                stroke(c);
+                line(x, i, x + w, i);
+            }
+        }
+        
+        function drawParticles() {
+            for (let p of particles) {
+                let alpha = map(p.size, 3, 12, 30, 80);
+                fill(255, 140, 66, alpha);
+                noStroke();
+                ellipse(p.x, p.y, p.size);
+                
+                // Move particles
+                p.x += cos(p.angle) * p.speed;
+                p.y += sin(p.angle) * p.speed * 0.5 + 0.2 * animSpeed;
+                p.angle += p.drift * 0.01;
+                
+                // Wrap around
+                if (p.y > height + 10) { p.y = -10; p.x = random(width); }
+                if (p.x > width + 10) p.x = -10;
+                if (p.x < -10) p.x = width + 10;
+            }
+        }
+        
+        function drawIllustration() {
+            let scale = 1;
+            
+            if (currentState === 'no-deals') {
+                drawNoDealsIllustration(scale);
+            } else if (currentState === 'no-friends') {
+                drawNoFriendsIllustration(scale);
+            } else if (currentState === 'no-messages') {
+                drawNoMessagesIllustration(scale);
+            } else if (currentState === 'premium-locked') {
+                drawPremiumLockedIllustration(scale);
+            }
+        }
+        
+        function drawNoDealsIllustration(scale) {
+            scale *= 0.9;
+            
+            // Empty map background
+            push();
+            rotate(-0.1);
+            
+            // Map base
+            fill(255);
+            stroke(230);
+            strokeWeight(2);
+            rectMode(CENTER);
+            rect(0, 20, 280 * scale, 200 * scale, 12);
+            
+            // Map roads
+            stroke(240);
+            strokeWeight(8);
+            line(-100 * scale, 20, 100 * scale, 20);
+            line(0, -60 * scale, 0, 100 * scale);
+            
+            // Location pin outline
+            fill(255, 200, 180);
+            noStroke();
+            ellipse(0, -30 * scale, 60 * scale, 60 * scale);
+            ellipse(0, -30 * scale, 25 * scale, 25 * scale);
+            
+            // Question marks floating
+            fill(255, 140, 66);
+            textSize(24 * scale);
+            textAlign(CENTER);
+            text('?', -60 * scale, -80 * scale);
+            text('?', 70 * scale, 40 * scale);
+            
+            pop();
+            
+            // Bear looking confused
+            drawConfusedBear(0, 100 * scale, 100 * scale);
+        }
+        
+        function drawNoFriendsIllustration(scale) {
+            // Silhouettes
+            let colors = ['#e0e0e0', '#d0d0d0', '#c0c0c0'];
+            
+            for (let i = 0; i < 3; i++) {
+                let x = (i - 1) * 80 * scale;
+                fill(colors[i]);
+                noStroke();
+                // Head
+                ellipse(x, -20 * scale, 50 * scale, 50 * scale);
+                // Body
+                ellipse(x, 50 * scale, 60 * scale, 70 * scale);
+            }
+            
+            // Bear with phone
+            drawPhoneBear(0, 80 * scale, 90 * scale);
+            
+            // Connection lines (dashed)
+            stroke(200);
+            strokeWeight(2);
+            drawingContext.setLineDash([5, 5]);
+            line(-60 * scale, 60 * scale, 0, 100 * scale);
+            line(60 * scale, 60 * scale, 0, 100 * scale);
+            drawingContext.setLineDash([]);
+        }
+        
+        function drawNoMessagesIllustration(scale) {
+            // Chat bubble
+            push();
+            fill(255);
+            stroke(255, 140, 66);
+            strokeWeight(3);
+            rectMode(CENTER);
+            rect(0, -20 * scale, 200 * scale, 120 * scale, 20);
+            
+            // Small bubble
+            ellipse(-80 * scale, 40 * scale, 40 * scale, 30 * scale);
+            pop();
+            
+            // Dots inside
+            fill(200);
+            noStroke();
+            for (let i = 0; i < 3; i++) {
+                let dotSize = 8 + sin(frameCount * 0.1 + i) * 3;
+                ellipse((i - 1) * 30 * scale, -20 * scale, dotSize * scale);
+            }
+            
+            // Bear with speech bubble
+            drawSpeakingBear(0, 120 * scale, 70 * scale);
+        }
+        
+        function drawPremiumLockedIllustration(scale) {
+            // Lock icon
+            push();
+            translate(0, -60 * scale);
+            
+            fill(255, 215, 0, 50);
+            noStroke();
+            ellipse(0, 0, 120 * scale, 120 * scale);
+            
+            // Lock body
+            fill(50);
+            rectMode(CENTER);
+            rect(0, 20 * scale, 60 * scale, 50 * scale, 8);
+            
+            // Lock arc
+            noFill();
+            stroke(50);
+            strokeWeight(8);
+            arc(0, -5 * scale, 50 * scale, 50 * scale, PI, TWO_PI);
+            
+            // Keyhole
+            fill(255);
+            ellipse(0, 15 * scale, 12 * scale, 12 * scale);
+            rect(0, 22 * scale, 6 * scale, 15 * scale, 2);
+            
+            pop();
+            
+            // Crown (premium symbol)
+            push();
+            translate(80 * scale, -100 * scale);
+            rotate(15);
+            fill(255, 215, 0);
+            noStroke();
+            beginShape();
+            vertex(-25 * scale, 15 * scale);
+            vertex(-25 * scale, -15 * scale);
+            vertex(-10 * scale, 0);
+            vertex(0, -25 * scale);
+            vertex(10 * scale, 0);
+            vertex(25 * scale, -15 * scale);
+            vertex(25 * scale, 15 * scale);
+            endShape(CLOSE);
+            pop();
+            
+            // Bear looking up
+            drawPremiumBear(0, 100 * scale, 80 * scale);
+        }
+        
+        function drawConfusedBear(x, y, size) {
+            let bearColor = color(139, 69, 19);
+            let lightColor = color(160, 100, 60);
+            
+            push();
+            translate(x, y);
+            
+            // Body
+            fill(bearColor);
+            ellipse(0, 20, size * 0.8, size * 0.75);
+            
+            // Head
+            fill(bearColor);
+            ellipse(0, -30, size * 0.65, size * 0.6);
+            
+            // Ears
+            ellipse(-size * 0.2, -size * 0.5, size * 0.22, size * 0.22);
+            ellipse(size * 0.2, -size * 0.5, size * 0.22, size * 0.22);
+            fill(lightColor);
+            ellipse(-size * 0.2, -size * 0.5, size * 0.1, size * 0.1);
+            ellipse(size * 0.2, -size * 0.5, size * 0.1, size * 0.1);
+            
+            // Eyes (questioning - one bigger)
+            fill(30);
+            ellipse(-size * 0.1, -size * 0.35, size * 0.08, size * 0.1);
+            ellipse(size * 0.12, -size * 0.35, size * 0.12, size * 0.12);
+            
+            // Question marks above head
+            fill(255, 140, 66);
+            textSize(size * 0.2);
+            textAlign(CENTER);
+            text('?', -size * 0.3, -size * 0.7);
+            text('?', size * 0.25, -size * 0.65);
+            
+            pop();
+        }
+        
+        function drawPhoneBear(x, y, size) {
+            let bearColor = color(139, 69, 19);
+            
+            push();
+            translate(x, y);
+            
+            // Body
+            fill(bearColor);
+            ellipse(0, 20, size * 0.7, size * 0.65);
+            
+            // Head
+            fill(bearColor);
+            ellipse(0, -25, size * 0.55, size * 0.5);
+            
+            // Holding phone
+            fill(200);
+            noStroke();
+            rectMode(CENTER);
+            rect(0, 0, size * 0.25, size * 0.4, 4);
+            
+            // Ears
+            fill(bearColor);
+            ellipse(-size * 0.18, -size * 0.45, size * 0.18, size * 0.18);
+            ellipse(size * 0.18, -size * 0.45, size * 0.18, size * 0.18);
+            
+            pop();
+        }
+        
+        function drawSpeakingBear(x, y, size) {
+            let bearColor = color(139, 69, 19);
+            
+            push();
+            translate(x, y);
+            
+            // Body
+            fill(bearColor);
+            ellipse(0, 20, size * 0.7, size * 0.65);
+            
+            // Head
+            fill(bearColor);
+            ellipse(0, -25, size * 0.55, size * 0.5);
+            
+            // Open mouth
+            fill(80);
+            ellipse(0, -10, size * 0.12, size * 0.1);
+            
+            // Ears
+            ellipse(-size * 0.18, -size * 0.45, size * 0.18, size * 0.18);
+            ellipse(size * 0.18, -size * 0.45, size * 0.18, size * 0.18);
+            
+            pop();
+        }
+        
+        function drawPremiumBear(x, y, size) {
+            let bearColor = color(139, 69, 19);
+            
+            push();
+            translate(x, y);
+            
+            // Body
+            fill(bearColor);
+            ellipse(0, 20, size * 0.75, size * 0.7);
+            
+            // Head
+            fill(bearColor);
+            ellipse(0, -30, size * 0.6, size * 0.55);
+            
+            // Ears
+            ellipse(-size * 0.2, -size * 0.5, size * 0.2, size * 0.2);
+            ellipse(size * 0.2, -size * 0.5, size * 0.2, size * 0.2);
+            
+            // Eyes - looking up
+            fill(30);
+            ellipse(-size * 0.1, -size * 0.38, size * 0.08, size * 0.1);
+            ellipse(size * 0.1, -size * 0.38, size * 0.08, size * 0.1);
+            
+            // Cheek blush
+            fill(255, 150, 150, 100);
+            ellipse(-size * 0.18, -size * 0.22, size * 0.1, size * 0.07);
+            ellipse(size * 0.18, -size * 0.22, size * 0.1, size * 0.07);
+            
+            pop();
+        }
+        
+        function drawText() {
+            fill(80);
+            textAlign(CENTER);
+            textSize(20);
+            textStyle(BOLD);
+            
+            let title = '';
+            let subtitle = '';
+            
+            switch(currentState) {
+                case 'no-deals':
+                    title = 'No Deals Nearby Yet';
+                    subtitle = 'Be the first to share a deal!';
+                    break;
+                case 'no-friends':
+                    title = 'No Friends Yet';
+                    subtitle = 'Add friends to share deals and chat';
+                    break;
+                case 'no-messages':
+                    title = 'No Messages Yet';
+                    subtitle = 'Start a conversation with a friend';
+                    break;
+                case 'premium-locked':
+                    title = 'Premium Feature';
+                    subtitle = 'Upgrade to unlock this feature';
+                    break;
+            }
+            
+            text(title, width/2, height - 80);
+            
+            fill(150);
+            textSize(14);
+            textStyle(NORMAL);
+            text(subtitle, width/2, height - 55);
+        }
+        
+        function setState(state) {
+            currentState = state;
+            
+            // Update button states
+            document.querySelectorAll('.state-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function updateSpeed() {
+            animSpeed = parseFloat(document.getElementById('speed').value);
+            document.getElementById('speed-val').textContent = animSpeed.toFixed(1);
+            
+            // Update particle speeds
+            for (let p of particles) {
+                p.speed = random(0.3, 1.5) * animSpeed;
+            }
+        }
+        
+        function updateParticles() {
+            particleCount = parseInt(document.getElementById('particleCount').value);
+            document.getElementById('particle-val').textContent = particleCount;
+            initParticles();
+        }
+        
+        function randomSeedArt() {
+            seed = floor(random(1, 10000));
+            randomSeed(seed);
+            noiseSeed(seed);
+            initParticles();
+        }
+    </script>
+</body>
+</html>

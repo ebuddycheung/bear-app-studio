@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealBuddy App Icon Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+            --dealbuddy-warm: #FF8C42;
+            --dealbuddy-soft: #FFE5D9;
+            --dealbuddy-accent: #4ECDC4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dealbuddy-soft) 0%, var(--anthropic-light) 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            color: var(--dealbuddy-warm);
+            margin-bottom: 8px;
+        }
+        .subtitle { color: var(--anthropic-mid-gray); margin-bottom: 24px; }
+        .canvas-wrapper {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(20,20,19,0.1);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .control-card {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .control-card h3 {
+            font-size: 14px;
+            color: var(--anthropic-mid-gray);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .slider-group { margin-bottom: 16px; }
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--anthropic-light-gray);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--dealbuddy-warm);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .color-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .color-pick {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .color-pick input[type="color"] {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        button {
+            background: var(--dealbuddy-warm);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        button:hover { background: #e67a32; transform: translateY(-1px); }
+        button.secondary { background: var(--anthropic-blue); }
+        button.secondary:hover { background: #5a8bb8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐻 DealBuddy App Icon Generator</h1>
+        <div class="subtitle">Interactive algorithmic art for DealBuddy brand</div>
+        
+        <div class="canvas-wrapper">
+            <div id="canvas-container"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-card">
+                <h3>Seed & Variations</h3>
+                <div class="slider-group">
+                    <label>Seed <span id="seed-val">42</span></label>
+                    <input type="range" id="seed" min="1" max="1000" value="42" oninput="updateParams()">
+                </div>
+                <div class="slider-group">
+                    <label>Bear Size <span id="bearSize-val">180</span></label>
+                    <input type="range" id="bearSize" min="80" max="300" value="180" oninput="updateParams()">
+                </div>
+                <div class="slider-group">
+                    <label>Rotation <span id="rotation-val">0</span>°</label>
+                    <input type="range" id="rotation" min="-30" max="30" value="0" oninput="updateParams()">
+                </div>
+                <button class="secondary" onclick="randomize()">↻ Random</button>
+            </div>
+            
+            <div class="control-card">
+                <h3>Color Palette</h3>
+                <div class="color-row">
+                    <div class="color-pick">
+                        <input type="color" id="bearColor" value="#8B4513" onchange="updateParams()">
+                        <span>Bear</span>
+                    </div>
+                    <div class="color-pick">
+                        <input type="color" id="accentColor" value="#FF8C42" onchange="updateParams()">
+                        <span>Accent</span>
+                    </div>
+                    <div class="color-pick">
+                        <input type="color" id="bgColor" value="#FFE5D9" onchange="updateParams()">
+                        <span>Background</span>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button onclick="setPreset('warm')">Warm</button>
+                    <button onclick="setPreset('premium')">Premium</button>
+                    <button onclick="setPreset('fresh')">Fresh</button>
+                </div>
+            </div>
+            
+            <div class="control-card">
+                <h3>Effects</h3>
+                <div class="slider-group">
+                    <label>Sparkle Count <span id="sparkle-val">12</span></label>
+                    <input type="range" id="sparkleCount" min="0" max="30" value="12" oninput="updateParams()">
+                </div>
+                <div class="slider-group">
+                    <label>Deal Tag Opacity <span id="tagVal-val">100</span>%</label>
+                    <input type="range" id="tagOpacity" min="0" max="100" value="100" oninput="updateParams()">
+                </div>
+                <div class="slider-group">
+                    <label>Glow Intensity <span id="glow-val">30</span></label>
+                    <input type="range" id="glowIntensity" min="0" max="100" value="30" oninput="updateParams()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let params = {
+            seed: 42,
+            bearSize: 180,
+            rotation: 0,
+            bearColor: '#8B4513',
+            accentColor: '#FF8C42',
+            bgColor: '#FFE5D9',
+            sparkleCount: 12,
+            tagOpacity: 100,
+            glowIntensity: 30
+        };
+        
+        function setup() {
+            let canvas = createCanvas(600, 600);
+            canvas.parent('canvas-container');
+            initializeArt();
+        }
+        
+        function initializeArt() {
+            randomSeed(params.seed);
+            noiseSeed(params.seed);
+        }
+        
+        function draw() {
+            background(params.bgColor);
+            
+            // Draw background circles (subtle)
+            noStroke();
+            for (let i = 0; i < 5; i++) {
+                let x = random(width);
+                let y = random(height);
+                let r = random(50, 150);
+                fill(red(color(params.accentColor)), green(color(params.accentColor)), blue(color(params.accentColor)), 15);
+                ellipse(x, y, r);
+            }
+            
+            // Glow effect behind bear
+            let glowAmount = params.glowIntensity;
+            drawingContext.shadowBlur = glowAmount;
+            drawingContext.shadowColor = params.accentColor;
+            
+            push();
+            translate(width/2, height/2);
+            rotate(params.rotation * PI / 180);
+            
+            // Draw the bear
+            drawBear(0, 0, params.bearSize);
+            
+            drawingContext.shadowBlur = 0;
+            pop();
+            
+            // Draw sparkles
+            drawSparkles();
+            
+            // Draw deal tag
+            drawDealTag();
+            
+            noLoop();
+        }
+        
+        function drawBear(x, y, size) {
+            let bearCol = color(params.bearColor);
+            let lightBear = color(red(bearCol)+30, green(bearCol)+20, blue(bearCol)+10);
+            
+            // Body
+            fill(bearCol);
+            ellipse(x, y + size*0.1, size * 0.9, size * 0.85);
+            
+            // Belly
+            fill(lightBear);
+            ellipse(x, y + size*0.15, size * 0.5, size * 0.45);
+            
+            // Head
+            fill(bearCol);
+            ellipse(x, y - size*0.25, size * 0.7, size * 0.65);
+            
+            // Ears
+            ellipse(x - size*0.22, y - size*0.45, size * 0.25, size * 0.25);
+            ellipse(x + size*0.22, y - size*0.45, size * 0.25, size * 0.25);
+            fill(lightBear);
+            ellipse(x - size*0.22, y - size*0.45, size * 0.12, size * 0.12);
+            ellipse(x + size*0.22, y - size*0.45, size * 0.12, size * 0.12);
+            
+            // Snout
+            fill(lightBear);
+            ellipse(x, y - size*0.15, size * 0.25, size * 0.2);
+            
+            // Nose
+            fill(50, 30, 20);
+            ellipse(x, y - size*0.18, size * 0.1, size * 0.08);
+            
+            // Eyes
+            fill(30);
+            ellipse(x - size*0.12, y - size*0.3, size * 0.08, size * 0.1);
+            ellipse(x + size*0.12, y - size*0.3, size * 0.08, size * 0.1);
+            
+            // Eye highlights
+            fill(255);
+            ellipse(x - size*0.13, y - size*0.32, size * 0.03);
+            ellipse(x + size*0.11, y - size*0.32, size * 0.03);
+            
+            // Arms
+            fill(bearCol);
+            ellipse(x - size*0.4, y + size*0.05, size * 0.25, size * 0.35);
+            ellipse(x + size*0.4, y + size*0.05, size * 0.25, size * 0.35);
+            
+            // Legs
+            ellipse(x - size*0.2, y + size*0.4, size * 0.28, size * 0.3);
+            ellipse(x + size*0.2, y + size*0.4, size * 0.28, size * 0.3);
+            
+            // Cheek blush
+            fill(255, 150, 150, 80);
+            ellipse(x - size*0.18, y - size*0.2, size * 0.12, size * 0.08);
+            ellipse(x + size*0.18, y - size*0.2, size * 0.12, size * 0.08);
+        }
+        
+        function drawSparkles() {
+            randomSeed(params.seed + 100);
+            let accent = color(params.accentColor);
+            
+            for (let i = 0; i < params.sparkleCount; i++) {
+                let x = random(width * 0.1, width * 0.9);
+                let y = random(height * 0.1, height * 0.9);
+                let size = random(3, 10);
+                let alpha = random(150, 255);
+                
+                fill(red(accent), green(accent), blue(accent), alpha);
+                noStroke();
+                
+                push();
+                translate(x, y);
+                rotate(frameCount * 0.01 + i);
+                
+                // Star shape
+                beginShape();
+                for (let j = 0; j < 4; j++) {
+                    let angle = j * PI / 2;
+                    vertex(cos(angle) * size, sin(angle) * size);
+                    vertex(cos(angle + PI/4) * size * 0.3, sin(angle + PI/4) * size * 0.3);
+                }
+                endShape(CLOSE);
+                
+                pop();
+            }
+        }
+        
+        function drawDealTag() {
+            let tagAlpha = params.tagOpacity * 2.55;
+            let tagSize = params.bearSize * 0.35;
+            
+            push();
+            translate(width * 0.65, height * 0.3);
+            rotate(-15);
+            
+            // Tag background
+            fill(params.accentColor);
+            rectMode(CENTER);
+            rect(0, 0, tagSize * 1.2, tagSize * 0.5, 8);
+            
+            // Tag hole
+            fill(255, tagAlpha);
+            ellipse(-tagSize * 0.45, 0, 12, 12);
+            
+            // % symbol
+            fill(255, tagAlpha);
+            textAlign(CENTER, CENTER);
+            textSize(tagSize * 0.25);
+            textStyle(BOLD);
+            text('%', 0, 0);
+            
+            pop();
+        }
+        
+        function updateParams() {
+            params.seed = parseInt(document.getElementById('seed').value);
+            params.bearSize = parseInt(document.getElementById('bearSize').value);
+            params.rotation = parseInt(document.getElementById('rotation').value);
+            params.bearColor = document.getElementById('bearColor').value;
+            params.accentColor = document.getElementById('accentColor').value;
+            params.bgColor = document.getElementById('bgColor').value;
+            params.sparkleCount = parseInt(document.getElementById('sparkleCount').value);
+            params.tagOpacity = parseInt(document.getElementById('tagOpacity').value);
+            params.glowIntensity = parseInt(document.getElementById('glowIntensity').value);
+            
+            // Update displays
+            document.getElementById('seed-val').textContent = params.seed;
+            document.getElementById('bearSize-val').textContent = params.bearSize;
+            document.getElementById('rotation-val').textContent = params.rotation;
+            document.getElementById('sparkle-val').textContent = params.sparkleCount;
+            document.getElementById('tagVal-val').textContent = params.tagOpacity;
+            document.getElementById('glow-val').textContent = params.glowIntensity;
+            
+            initializeArt();
+            redraw();
+        }
+        
+        function randomize() {
+            document.getElementById('seed').value = Math.floor(random(1, 1000));
+            document.getElementById('bearSize').value = random(120, 220);
+            document.getElementById('rotation').value = random(-20, 20);
+            document.getElementById('sparkleCount').value = random(5, 20);
+            updateParams();
+        }
+        
+        function setPreset(preset) {
+            if (preset === 'warm') {
+                document.getElementById('bearColor').value = '#8B4513';
+                document.getElementById('accentColor').value = '#FF8C42';
+                document.getElementById('bgColor').value = '#FFE5D9';
+            } else if (preset === 'premium') {
+                document.getElementById('bearColor').value = '#4A3728';
+                document.getElementById('accentColor').value = '#FFD700';
+                document.getElementById('bgColor').value = '#1a1a2e';
+            } else if (preset === 'fresh') {
+                document.getElementById('bearColor').value = '#6B8E23';
+                document.getElementById('accentColor').value = '#4ECDC4';
+                document.getElementById('bgColor').value = '#E0F7FA';
+            }
+            updateParams();
+        }
+    </script>
+</body>
+</html>
