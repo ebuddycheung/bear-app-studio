@@ -6,12 +6,18 @@ struct DealBuddyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var deepLinkManager = DeepLinkManager.shared
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(authViewModel)
                 .environmentObject(notificationManager)
+                .environmentObject(deepLinkManager)
+                .onOpenURL { url in
+                    // Handle universal links and URL scheme
+                    deepLinkManager.handleDeepLink(url)
+                }
         }
     }
 }

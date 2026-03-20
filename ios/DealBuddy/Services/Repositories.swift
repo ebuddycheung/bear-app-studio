@@ -101,6 +101,22 @@ final class DealRepository {
         )
     }
     
+    // MARK: - Fetch Deal by ID
+    func fetchDeal(byId id: UUID) async throws -> Deal? {
+        /*
+        let response: [Deal] = try await supabase
+            .from("deals")
+            .select()
+            .eq("id", value: id.uuidString)
+            .limit(1)
+            .execute()
+        return response.first
+        */
+        
+        // Search in mock data
+        return Deal.mockDeals.first { $0.id == id }
+    }
+    
     // MARK: - Create Deal
     func createDeal(_ deal: Deal) async throws -> Deal {
         /*
@@ -172,5 +188,76 @@ final class StudySpotRepository {
     
     func fetchNearbySpots(latitude: Double, longitude: Double, radiusKm: Double = 2) async throws -> [StudySpot] {
         return StudySpot.mockSpots
+    }
+}
+
+// MARK: - Profile Repository
+final class ProfileRepository {
+    static let shared = ProfileRepository()
+    private let supabase = SupabaseService.shared.client
+    
+    private init() {}
+    
+    // MARK: - Fetch Profile
+    func fetchProfile(userId: UUID) async throws -> Profile? {
+        /*
+        let response: [Profile] = try await supabase
+            .from("profiles")
+            .select("*, photos:profile_photos(*), links:profile_links(*)")
+            .eq("id", value: userId.uuidString)
+            .limit(1)
+            .execute()
+        return response.first
+        */
+        
+        // Return nil - actual implementation would fetch from Supabase
+        return nil
+    }
+    
+    // MARK: - Update Profile
+    func updateProfile(userId: UUID, name: String?, university: String?, bio: String?) async throws {
+        /*
+        try await supabase
+            .from("profiles")
+            .update([
+                "name": name,
+                "university": university,
+                "bio": bio,
+                "updated_at": Date()
+            ])
+            .eq("id", value: userId.uuidString)
+            .execute()
+        */
+        
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 500_000_000)
+        print("✅ Profile updated: name=\(name ?? "nil"), university=\(university ?? "nil"), bio=\(bio ?? "nil")")
+    }
+    
+    // MARK: - Upload Avatar
+    func uploadAvatar(userId: UUID, imageData: Data) async throws -> String {
+        /*
+        let fileName = "\(userId.uuidString)/avatar.jpg"
+        try await supabase.storage
+            .from("avatars")
+            .upload(fileName, data: imageData, options: FileOptions(contentType: "image/jpeg"))
+        
+        let publicURL = try supabase.storage
+            .from("avatars")
+            .getPublicURL(fileName)
+        
+        // Update profile with new avatar URL
+        try await supabase
+            .from("profiles")
+            .update(["avatar_url": publicURL.path, "updated_at": Date()])
+            .eq("id", value: userId.uuidString)
+            .execute()
+        
+        return publicURL.path
+        */
+        
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        return "avatar_placeholder.jpg"
     }
 }

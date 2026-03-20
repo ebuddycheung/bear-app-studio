@@ -20,11 +20,18 @@ A social app for young people to discover local deals and find study partners.
 - **Free**: Basic profile (1 photo)
 - **Premium ($2.99-4.99/mo)**: Multiple photos, custom links, premium badge 🅿️
 
-### Tech Stack
-- **Frontend**: SwiftUI (iOS)
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Maps**: MapKit integration
-- **Payments**: Apple In-App Purchase
+---
+
+## 🚀 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | SwiftUI (iOS 17+) |
+| **Backend** | Supabase (PostgreSQL, Auth, Storage) |
+| **Maps** | MapKit |
+| **Payments** | Apple In-App Purchase (StoreKit 2) |
+| **Build** | XcodeGen |
+| **State** | SwiftUI @Observable |
 
 ---
 
@@ -32,7 +39,7 @@ A social app for young people to discover local deals and find study partners.
 
 ```
 ios/DealBuddy/
-├── DealBuddyApp.swift          # App entry point
+├── DealBuddyApp.swift          # App entry point, deep links
 ├── Extensions/
 │   ├── AppConstants.swift      # App-wide constants & colors
 │   └── Color+Hex.swift         # Color extension for hex colors
@@ -40,15 +47,20 @@ ios/DealBuddy/
 │   ├── Deal.swift              # Deal model with categories
 │   ├── Message.swift           # Chat messages
 │   ├── Profile.swift           # User profile
-│   └── StudyPartner.swift      # Study partners & spots
+│   ├── StudyPartner.swift      # Study partners & spots
+│   └── StudyRequest.swift      # Study buddy requests
 ├── Services/
+│   ├── DeepLinkManager.swift   # Deep link handling (dealbuddy://)
+│   ├── IAPService.swift        # Apple IAP (StoreKit 2)
 │   ├── LocationManager.swift   # Location services
-│   ├── Repositories.swift      # Data repositories
-│   └── SupabaseService.swift   # Supabase client (configured)
+│   ├── NotificationManager.swift # Push notifications
+│   ├── Repositories.swift      # Data repositories (CRUD)
+│   └── SupabaseService.swift   # Supabase client
 ├── ViewModels/
 │   ├── AuthViewModel.swift     # Authentication state
 │   ├── ChatViewModel.swift     # Chat conversations
 │   ├── DiscoverViewModel.swift # Discover tab data
+│   ├── FriendsViewModel.swift  # Friends management
 │   ├── HomeViewModel.swift     # Home feed data
 │   ├── LeaderboardViewModel.swift # Leaderboard data
 │   └── ProfileViewModel.swift  # Profile data
@@ -57,66 +69,137 @@ ios/DealBuddy/
     ├── ChatDetailView.swift    # Chat conversation detail
     ├── ContentView.swift       # Main content router
     ├── CreateDealView.swift    # Create new deal form
-    ├── DealDetailView.swift    # Deal detail page
-    ├── DiscoverView.swift      # Discover tab
+    ├── DealDetailView.swift    # Deal detail page with map
+    ├── DiscoverView.swift      # Discover tab (categories)
     ├── FriendsView.swift       # Friends management
     ├── HomeView.swift          # Home feed
+    ├── ImagePickerView.swift   # Photo picker
     ├── LeaderboardView.swift   # Leaderboards
-    ├── LoginView.swift         # Login/Signup
-    └── ProfileView.swift       # User profile
+    ├── LoginView.swift         # Login/Signup with Apple Sign In
+    ├── NotificationSettingsView.swift # Push settings
+    ├── PremiumUpgradeView.swift # IAP subscription UI
+    ├── ProfileView.swift       # User profile (premium features)
+    └── StudyPartnerRequestView.swift # Study buddy requests
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Setup Instructions
 
 ### Prerequisites
-- Xcode 16.0+
-- XcodeGen installed (`brew install xcodegen`)
-- Supabase account (for backend)
+- Xcode 16.0+ (for Swift 5.9+ and iOS 17+)
+- XcodeGen installed: `brew install xcodegen`
+- Supabase account (free tier works)
 
-### Setup
-1. Clone the repository
-2. Run `xcodegen` in the `ios` directory
-3. Open `DealBuddy.xcodeproj`
-4. Configure Supabase credentials in `Services/SupabaseService.swift`
-5. Run on simulator or device
+### Quick Start
 
-### Database Setup
-Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
+```bash
+# 1. Navigate to project
+cd /Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios
+
+# 2. Generate Xcode project (if needed)
+xcodegen
+
+# 3. Open in Xcode
+open DealBuddy.xcodeproj
+
+# 4. Build and run on simulator
+# Select iPhone simulator → Cmd+R
+```
+
+### Backend Setup
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Run `docs/SUPABASE_SETUP.md` instructions in Supabase SQL Editor
+3. Update credentials in `Services/SupabaseService.swift` if needed
+
+### App Store Setup
+
+See `docs/APPSTORE_SETUP.md` for:
+- Apple Sign In configuration
+- In-App Purchase setup
+- Push Notifications certificates
+- App Store Connect configuration
 
 ---
 
 ## 📊 Development Status
 
-### Completed ✅
-- [x] Project structure setup with XcodeGen
-- [x] SwiftUI views (Home, Discover, Chat, Profile)
+### ✅ Completed Features
+
+**Core**
+- [x] Project structure with XcodeGen
+- [x] SwiftUI views (Home, Discover, Chat, Profile, Friends, Leaderboard)
 - [x] Data models matching Supabase schema
-- [x] Supabase client integration (with actual API keys)
+- [x] Supabase client integration (configured)
 - [x] ViewModels for all screens
 - [x] Repositories for data operations
-- [x] Location services integration
+- [x] Location services (MapKit)
 - [x] Deal detail view with map
 - [x] Settings and Edit Profile views
-- [x] Authentication flow (Supabase)
-- [x] Friends management UI
-- [x] Leaderboard view
-- [x] Create Deal view with form
-- [x] Real Supabase data fetching in Home/Discover views
-- [x] App builds successfully on iOS Simulator
-- [x] Apple Sign In integration
-- [x] Premium subscription (IAP) with StoreKit 2
-- [x] Chat detail view with message bubbles
-- [x] **PREMIUM** Multiple photo upload (up to 5) with Supabase Storage
-- [x] **PREMIUM** Custom social links (Instagram, Twitter, LinkedIn, Portfolio)
-- [x] Push notifications with device token registration
 
-### In Progress 🔄
-- [ ] Deep linking for shared deals
+**Authentication**
+- [x] Email/password signup & login
+- [x] Apple Sign In (OAuth)
+- [x] Session management
+- [x] Protected routes
 
-### Planned 📋
-- [ ] Deep linking for shared deals
+**Social**
+- [x] Friends management (add/remove/accept)
+- [x] Friends list and pending requests
+- [x] Leaderboard (top deal claimers)
+- [x] Home feed with deals
+
+**Premium (IAP)**
+- [x] Premium subscription (monthly $2.99, yearly $19.99)
+- [x] StoreKit 2 implementation
+- [x] Restore purchases
+- [x] Multiple profile photos (up to 5) - PREMIUM
+- [x] Custom social links - PREMIUM
+- [x] Premium badge display
+- [x] Early access to promoted deals
+
+**Deals**
+- [x] Browse deals by category
+- [x] Deal detail with map
+- [x] Create deal form
+- [x] Claim deals
+- [x] Share deals (deep links)
+
+**Chat**
+- [x] Chat list view
+- [x] Chat detail with message bubbles
+- [x] Real-time message display
+
+**Deep Linking**
+- [x] `dealbuddy://deal/{dealId}` - Open deal detail
+- [x] `dealbuddy://profile/{userId}` - Open user profile
+- [x] `dealbuddy://friends` - Open friends tab
+- [x] `dealbuddy://leaderboard` - Open leaderboard
+
+**Push Notifications**
+- [x] Device token registration
+- [x] Notification settings UI
+
+### 🔄 In Progress
+- None currently
+
+### 📋 Planned
+- [ ] Study buddy matching algorithm
+- [ ] Real-time messaging (Supabase Realtime)
+- [ ] Deal notifications
+- [ ] Analytics (Firebase/Supabase)
+- [ ] TestFlight beta testing
+
+---
+
+## 🔗 Key URLs
+
+| Resource | URL |
+|----------|-----|
+| Supabase Dashboard | https://supabase.com/dashboard |
+| App Store Connect | https://appstoreconnect.apple.com |
+| Apple Developer Portal | https://developer.apple.com |
 
 ---
 
@@ -127,8 +210,9 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 - Young professionals (21-28)
 
 ### Revenue Model
-- Monthly subscription (Apple IAP)
-- 70% Apple / 30% us
+- Monthly subscription: $2.99/mo
+- Yearly subscription: $19.99/yr (save 44%)
+- Apple takes 30% (15% for small business)
 
 ### Success Metrics
 - 1,000 downloads in Month 1
@@ -137,4 +221,4 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 
 ---
 
-*Last updated: 2026-03-19*
+*Last updated: 2026-03-20*

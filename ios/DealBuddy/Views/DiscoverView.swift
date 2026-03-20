@@ -3,9 +3,10 @@ import SwiftUI
 struct DiscoverView: View {
     @StateObject private var viewModel = DiscoverViewModel()
     @State private var selectedSubTab = 0
+    @Binding var navigationPath: NavigationPath
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             VStack(spacing: 0) {
                 // Sub-tabs
                 HStack(spacing: 8) {
@@ -24,7 +25,7 @@ struct DiscoverView: View {
                 // Content
                 ScrollView {
                     if selectedSubTab == 0 {
-                        DealsContent(deals: viewModel.deals)
+                        DealsContent(deals: viewModel.deals, navigationPath: $navigationPath)
                     } else if selectedSubTab == 1 {
                         PartnersContent(partners: viewModel.partners)
                     } else {
@@ -41,6 +42,9 @@ struct DiscoverView: View {
             }
             .refreshable {
                 await viewModel.loadData()
+            }
+            .navigationDestination(for: Deal.self) { deal in
+                DealDetailView(deal: deal)
             }
         }
     }
@@ -67,6 +71,7 @@ struct SubTabButton: View {
 
 struct DealsContent: View {
     let deals: [Deal]
+    @Binding var navigationPath: NavigationPath
     
     var body: some View {
         VStack(spacing: 12) {
@@ -78,6 +83,9 @@ struct DealsContent: View {
                     location: deal.locationName ?? "Unknown",
                     distance: "0.5km"
                 )
+                .onTapGesture {
+                    navigationPath.append(deal)
+                }
             }
         }
         .padding()
@@ -285,5 +293,5 @@ struct SpotCard: View {
 }
 
 #Preview {
-    DiscoverView()
+    DiscoverView(navigationPath: .constant(NavigationPath()))
 }

@@ -349,6 +349,8 @@ struct EditProfileView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showSourcePicker = false
+    @State private var isSaving = false
+    @State private var saveError: String?
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -405,12 +407,25 @@ struct EditProfileView: View {
             }
             
             Section {
-                Button("Save Changes") {
-                    // TODO: Save changes to Supabase
-                    // For now, just dismiss
-                    dismiss()
+                Button(action: saveChanges) {
+                    if isSaving {
+                        HStack {
+                            ProgressView()
+                            Text("Saving...")
+                        }
+                        .frame(maxWidth: .infinity)
+                    } else {
+                        Text("Save Changes")
+                            .frame(maxWidth: .infinity)
+                    }
                 }
-                .frame(maxWidth: .infinity)
+                .disabled(isSaving)
+                
+                if let error = saveError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
             }
         }
         .navigationTitle("Edit Profile")
@@ -430,6 +445,43 @@ struct EditProfileView: View {
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(selectedImage: $selectedImage, sourceType: .photoLibrary)
+        }
+    }
+    
+    private func saveChanges() {
+        isSaving = true
+        saveError = nil
+        
+        Task {
+            do {
+                // Get user ID from profile or generate a placeholder
+                let userId = profile?.id ?? UUID()
+                
+                // Update profile in Supabase
+                try await ProfileRepository.shared.updateProfile(
+                    userId: userId,
+                    name: name.isEmpty ? nil : name,
+                    university: university.isEmpty ? nil : university,
+                    bio: bio.isEmpty ? nil : bio
+                )
+                
+                // Upload new avatar if selected
+                if let image = selectedImage, let imageData = image.jpegData(compressionQuality: 0.8) {
+                    _ = try await ProfileRepository.shared.uploadAvatar(userId: userId, imageData: imageData)
+                }
+                
+                await MainActor.run {
+                    isSaving = false
+                    dismiss()
+                }
+            } catch {
+                await MainActor.run {
+                    saveError = error.localizedDescription
+                    isSaving = false
+                    // For demo, still dismiss
+                    dismiss()
+                }
+            }
         }
     }
 }

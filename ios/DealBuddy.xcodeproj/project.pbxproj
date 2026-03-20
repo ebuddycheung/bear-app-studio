@@ -20,6 +20,7 @@
 		45AFB5380BC01523013C4C6D /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7431BDF2D27A57343B8DF2 /* ChatDetailView.swift */; };
 		4BE43ACF7F15E2F9A4FB3AEC /* DealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9D4D88ABEB2914BB919C0 /* DealDetailView.swift */; };
 		4F500396EE7D1FBA1008DD9B /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769A1DAD1A4530FB82D4F230 /* AuthViewModel.swift */; };
+		539BBCFC084B98725AFB507D /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655FC21E3425A6C670BAC283 /* DeepLinkManager.swift */; };
 		58862FBB6015F89EFE94B554 /* DealBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE430309A8B8068D8E524E8 /* DealBuddyApp.swift */; };
 		590DFA66C5FA9777B0706FBD /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D2705E1EEEF7341A25FE80 /* ImagePickerView.swift */; };
 		6B84669DEF8C5883327C494C /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AA52494D3EEB4F8E2CA4CD /* DiscoverView.swift */; };
@@ -61,6 +62,7 @@
 		44797AC1486B7D92F6D3C4D1 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		5856F7C06F94FC976E2B1844 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		60D7ED8226E83C7375216C9A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		655FC21E3425A6C670BAC283 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkManager.swift; sourceTree = "<group>"; };
 		698C64C9CE598FC5A50EAE67 /* DiscoverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewModel.swift; sourceTree = "<group>"; };
 		6AED6043ECB62CDF2B409EE1 /* PremiumUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumUpgradeView.swift; sourceTree = "<group>"; };
 		734AAD2B9235CEAC93F85137 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 		2BD6F1A40834FC5FAEAAB5FA /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				655FC21E3425A6C670BAC283 /* DeepLinkManager.swift */,
 				A9871BF77F2ED0ED96BDB0F4 /* IAPService.swift */,
 				7622D74845DF13BAB5B7742D /* LocationManager.swift */,
 				1C4657EC0415E0205E388545 /* NotificationManager.swift */,
@@ -301,6 +304,7 @@
 				C607BA35DFCCED5A783B1856 /* Deal.swift in Sources */,
 				58862FBB6015F89EFE94B554 /* DealBuddyApp.swift in Sources */,
 				4BE43ACF7F15E2F9A4FB3AEC /* DealDetailView.swift in Sources */,
+				539BBCFC084B98725AFB507D /* DeepLinkManager.swift in Sources */,
 				6B84669DEF8C5883327C494C /* DiscoverView.swift in Sources */,
 				6C57684E4442206283DFDF11 /* DiscoverViewModel.swift in Sources */,
 				E70557A49B63B8A06A46FA5E /* FriendsView.swift in Sources */,

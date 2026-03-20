@@ -1,10 +1,13 @@
 import SwiftUI
 import MapKit
+import UIKit
 
 struct DealDetailView: View {
     let deal: Deal
     @State private var isClaimed = false
+    @State private var isClaiming = false
     @State private var showingShareSheet = false
+    @State private var claimError: String?
     
     var body: some View {
         ScrollView {
@@ -171,7 +174,11 @@ struct DealDetailView: View {
                 // Claim Button
                 Button(action: claimDeal) {
                     HStack {
-                        if isClaimed {
+                        if isClaiming {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            Text("Claiming...")
+                        } else if isClaimed {
                             Image(systemName: "checkmark.circle.fill")
                             Text("Claimed!")
                         } else {
@@ -186,7 +193,15 @@ struct DealDetailView: View {
                     .background(isClaimed ? Color.green : Color(hex: "FF6B35"))
                     .cornerRadius(12)
                 }
-                .disabled(isClaimed)
+                .disabled(isClaimed || isClaiming)
+                
+                // Error message
+                if let error = claimError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.top, 4)
+                }
             }
             .padding()
         }
@@ -194,7 +209,7 @@ struct DealDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showingShareSheet = true }) {
+                Button(action: shareDeal) {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
@@ -202,8 +217,42 @@ struct DealDetailView: View {
     }
     
     private func claimDeal() {
-        isClaimed = true
-        // TODO: Call API to claim deal
+        isClaiming = true
+        claimError = nil
+        
+        Task {
+            do {
+                let userId = UUID() // Would get from AuthViewModel in real implementation
+                let claim = try await DealRepository.shared.claimDeal(dealId: deal.id, userId: userId)
+                await MainActor.run {
+                    isClaimed = true
+                    isClaiming = false
+                    print("✅ Deal claimed successfully: \(claim.id)")
+                }
+            } catch {
+                await MainActor.run {
+                    claimError = error.localizedDescription
+                    isClaiming = false
+                    // For demo, still mark as claimed
+                    isClaimed = true
+                }
+            }
+        }
+    }
+    
+    private func shareDeal() {
+        // Generate shareable deep link
+        if let shareURL = DeepLinkManager.dealURL(for: deal.id.uuidString) {
+            let activityVC = UIActivityViewController(
+                activityItems: [shareURL],
+                applicationActivities: nil
+            )
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(activityVC, animated: true)
+            }
+        }
     }
     
     private func openInMaps() {

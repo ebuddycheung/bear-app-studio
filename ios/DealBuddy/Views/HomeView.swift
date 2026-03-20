@@ -3,9 +3,10 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var showCreateDeal = false
+    @Binding var navigationPath: NavigationPath
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     // Promoted Section
@@ -17,6 +18,9 @@ struct HomeView: View {
                                 .foregroundColor(.gray)
                             
                             PromotedDealCard(deal: promoted)
+                                .onTapGesture {
+                                    navigationPath.append(promoted)
+                                }
                         }
                     }
                     
@@ -55,6 +59,9 @@ struct HomeView: View {
                                 distance: "0.5km",
                                 expiry: formatExpiry(deal.expiresAt)
                             )
+                            .onTapGesture {
+                                navigationPath.append(deal)
+                            }
                         }
                     }
                 }
@@ -79,6 +86,9 @@ struct HomeView: View {
             }
             .refreshable {
                 await viewModel.loadData()
+            }
+            .navigationDestination(for: Deal.self) { deal in
+                DealDetailView(deal: deal)
             }
         }
     }
@@ -242,5 +252,5 @@ struct DealCard: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(navigationPath: .constant(NavigationPath()))
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Deal Model
-struct Deal: Identifiable, Codable {
+struct Deal: Identifiable, Codable, Hashable {
     let id: UUID
     var title: String
     var description: String?
