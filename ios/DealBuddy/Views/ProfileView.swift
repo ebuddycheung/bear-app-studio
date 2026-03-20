@@ -273,7 +273,7 @@ struct StatItem: View {
 // MARK: - Settings View
 struct SettingsView: View {
     @StateObject private var iapService = IAPService.shared
-    @State private var notificationsEnabled = true
+    @EnvironmentObject var notificationManager: NotificationManager
     @State private var locationEnabled = true
     @State private var darkModeEnabled = false
     
@@ -307,7 +307,16 @@ struct SettingsView: View {
             }
             
             Section("Notifications") {
-                Toggle("Push Notifications", isOn: $notificationsEnabled)
+                NavigationLink(destination: NotificationSettingsView()) {
+                    HStack {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(Color(hex: "FF6B35"))
+                        Text("Push Notifications")
+                        Spacer()
+                        Text(notificationManager.isAuthorized ? "Enabled" : "Disabled")
+                            .foregroundColor(notificationManager.isAuthorized ? .green : .secondary)
+                    }
+                }
                 Toggle("Location Services", isOn: $locationEnabled)
             }
             

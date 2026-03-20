@@ -23,12 +23,14 @@
 		58862FBB6015F89EFE94B554 /* DealBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE430309A8B8068D8E524E8 /* DealBuddyApp.swift */; };
 		590DFA66C5FA9777B0706FBD /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D2705E1EEEF7341A25FE80 /* ImagePickerView.swift */; };
 		6B84669DEF8C5883327C494C /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AA52494D3EEB4F8E2CA4CD /* DiscoverView.swift */; };
+		6BADCBF290DEA29FFC670F1E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4657EC0415E0205E388545 /* NotificationManager.swift */; };
 		6C57684E4442206283DFDF11 /* DiscoverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698C64C9CE598FC5A50EAE67 /* DiscoverViewModel.swift */; };
 		6C719A7F6665169E4A346600 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A116312670CE807660F05D0 /* PhotosUI.framework */; };
 		71CBEBC244387284A8D11889 /* CreateDealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77E8EAF5356A735F43F0EF7 /* CreateDealView.swift */; };
 		8BB23EAED0FFF386B02D2497 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFBD8AFB8C3ABD86F1E0E45 /* Color+Hex.swift */; };
 		8F78C1B6CB530F93D9EB2ADC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7622D74845DF13BAB5B7742D /* LocationManager.swift */; };
 		97B2252973CCFA4EF2E280DA /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1347905FFFB0F49E07B34B /* Profile.swift */; };
+		9D5BB4554F6609102413546D /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6306E793571631CEF59E4 /* NotificationSettingsView.swift */; };
 		9ED3CD75AEF17915CDA13762 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 734AAD2B9235CEAC93F85137 /* Assets.xcassets */; };
 		9F6F004A1019099F9F30E813 /* Repositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59795C167AF9E92CA4B9F17 /* Repositories.swift */; };
 		A92FA82CB65D41BEA5976904 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67680D4E4A1171D80E944C0 /* ChatView.swift */; };
@@ -49,6 +51,8 @@
 /* Begin PBXFileReference section */
 		0AF9D4D88ABEB2914BB919C0 /* DealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealDetailView.swift; sourceTree = "<group>"; };
 		185BF50D23CBF2973C81F4A3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		1C4657EC0415E0205E388545 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		1FD6306E793571631CEF59E4 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		29D2705E1EEEF7341A25FE80 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		2ECC44C1354087ED5FF961DD /* Deal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deal.swift; sourceTree = "<group>"; };
 		399676904A8BE71CDD3A0912 /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 			children = (
 				A9871BF77F2ED0ED96BDB0F4 /* IAPService.swift */,
 				7622D74845DF13BAB5B7742D /* LocationManager.swift */,
+				1C4657EC0415E0205E388545 /* NotificationManager.swift */,
 				C59795C167AF9E92CA4B9F17 /* Repositories.swift */,
 				8A1043AC12F2AABBE51B735D /* SupabaseService.swift */,
 			);
@@ -157,6 +162,7 @@
 				29D2705E1EEEF7341A25FE80 /* ImagePickerView.swift */,
 				7F1D688A069BA13F8C632419 /* LeaderboardView.swift */,
 				D7A392939D98C5BF5D46A778 /* LoginView.swift */,
+				1FD6306E793571631CEF59E4 /* NotificationSettingsView.swift */,
 				6AED6043ECB62CDF2B409EE1 /* PremiumUpgradeView.swift */,
 				44797AC1486B7D92F6D3C4D1 /* ProfileView.swift */,
 				F9732A6207932E56BA9A86B7 /* StudyPartnerRequestView.swift */,
@@ -308,6 +314,8 @@
 				8F78C1B6CB530F93D9EB2ADC /* LocationManager.swift in Sources */,
 				EE090240C599F3576B821CDC /* LoginView.swift in Sources */,
 				B8BC8D02C1087872618A2AAD /* Message.swift in Sources */,
+				6BADCBF290DEA29FFC670F1E /* NotificationManager.swift in Sources */,
+				9D5BB4554F6609102413546D /* NotificationSettingsView.swift in Sources */,
 				1CEF563090B998353B9C1391 /* PremiumUpgradeView.swift in Sources */,
 				97B2252973CCFA4EF2E280DA /* Profile.swift in Sources */,
 				3A030CF7850C3EC35C343BB9 /* ProfileView.swift in Sources */,

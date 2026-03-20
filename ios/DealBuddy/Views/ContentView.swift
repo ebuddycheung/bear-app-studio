@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Content View
 struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var notificationManager: NotificationManager
     
     var body: some View {
         Group {
@@ -19,6 +20,7 @@ struct ContentView: View {
 struct MainTabView: View {
     @Binding var isLoggedIn: Bool
     @State private var selectedTab = 0
+    @EnvironmentObject var notificationManager: NotificationManager
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -59,10 +61,17 @@ struct MainTabView: View {
                 .tag(5)
         }
         .tint(Color(hex: "FF6B35"))
+        .onAppear {
+            // Request notification permission on first launch
+            Task {
+                await notificationManager.requestAuthorization()
+            }
+        }
     }
 }
 
 #Preview {
     ContentView()
         .environmentObject(AuthViewModel())
+        .environmentObject(NotificationManager.shared)
 }

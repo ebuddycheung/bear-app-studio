@@ -110,9 +110,9 @@ Run the SQL in `supabase/schema.sql` in your Supabase SQL editor.
 - [x] Chat detail view with message bubbles
 - [x] **PREMIUM** Multiple photo upload (up to 5) with Supabase Storage
 - [x] **PREMIUM** Custom social links (Instagram, Twitter, LinkedIn, Portfolio)
+- [x] Push notifications with device token registration
 
 ### In Progress 🔄
-- [ ] Push notifications
 - [ ] Deep linking for shared deals
 
 ### Planned 📋
