@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealBuddy Onboarding Illustrations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+            --dealbuddy-amber: #F59E0B;
+            --dealbuddy-coral: #F97316;
+            --dealbuddy-pink: #FB7185;
+            --dealbuddy-teal: #14B8A6;
+            --dealbuddy-indigo: #6366F1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+            overflow-y: auto;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h1 {
+            font-family: 'Lora', serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .sidebar .subtitle {
+            color: var(--anthropic-mid-gray);
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .control-section {
+            margin-bottom: 32px;
+        }
+
+        .control-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--anthropic-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-section h3::before {
+            content: '•';
+            color: var(--dealbuddy-amber);
+            font-weight: bold;
+        }
+
+        .seed-input {
+            width: 100%;
+            background: var(--anthropic-light);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--anthropic-light-gray);
+            text-align: center;
+        }
+
+        .seed-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .button {
+            background: var(--dealbuddy-amber);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .button:hover {
+            background: #e08c0a;
+            transform: translateY(-1px);
+        }
+
+        .button.secondary {
+            background: var(--anthropic-blue);
+        }
+
+        .button.secondary:hover {
+            background: #5a8bb8;
+        }
+
+        .button.tertiary {
+            background: var(--dealbuddy-teal);
+        }
+
+        .button.tertiary:hover {
+            background: #12a594;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .button-row .button {
+            flex: 1;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: var(--anthropic-light-gray);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--dealbuddy-amber);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--anthropic-mid-gray);
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .canvas-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .canvas-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+        }
+
+        .canvas-card h4 {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            background: var(--anthropic-light);
+            border-bottom: 1px solid var(--anthropic-light-gray);
+        }
+
+        #canvas-container, #canvas-container2, #canvas-container3, #canvas-container4 {
+            width: 100%;
+            aspect-ratio: 1;
+        }
+
+        #canvas-container canvas, #canvas-container2 canvas, 
+        #canvas-container3 canvas, #canvas-container4 canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .canvas-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>DealBuddy Onboarding</h1>
+            <div class="subtitle">Warm Discovery - Algorithmic onboarding illustrations for DealBuddy app</div>
+
+            <div class="control-section">
+                <h3>Seed</h3>
+                <input type="number" id="seed-input" class="seed-input" value="42" onchange="updateSeed()">
+                <div class="seed-controls">
+                    <button class="button secondary" onclick="previousSeed()">← Prev</button>
+                    <button class="button secondary" onclick="nextSeed()">Next →</button>
+                </div>
+                <button class="button tertiary" onclick="randomSeedAndUpdate()">↻ Random</button>
+            </div>
+
+            <div class="control-section">
+                <h3>Parameters</h3>
+                
+                <div class="control-group">
+                    <label>Energy (Animation Speed)</label>
+                    <div class="slider-container">
+                        <input type="range" id="energy" min="1" max="100" step="1" value="50" oninput="updateParam('energy', this.value)">
+                        <span class="value-display" id="energy-value">50</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Particle Count</label>
+                    <div class="slider-container">
+                        <input type="range" id="particleCount" min="20" max="200" step="5" value="80" oninput="updateParam('particleCount', this.value)">
+                        <span class="value-display" id="particleCount-value">80</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Warmth (Color Temperature)</label>
+                    <div class="slider-container">
+                        <input type="range" id="warmth" min="0" max="100" step="5" value="70" oninput="updateParam('warmth', this.value)">
+                        <span class="value-display" id="warmth-value">70</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Clustering (Deal Grouping)</label>
+                    <div class="slider-container">
+                        <input type="range" id="clustering" min="0" max="100" step="5" value="60" oninput="updateParam('clustering', this.value)">
+                        <span class="value-display" id="clustering-value">60</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Actions</h3>
+                <div class="button-row">
+                    <button class="button" onclick="resetParameters()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div class="canvas-row">
+                <div class="canvas-card">
+                    <h4>🎯 Discover Deals</h4>
+                    <div id="canvas-container"></div>
+                </div>
+                <div class="canvas-card">
+                    <h4>💰 Save & Share</h4>
+                    <div id="canvas-container2"></div>
+                </div>
+            </div>
+            <div class="canvas-row">
+                <div class="canvas-card">
+                    <h4>📚 Find Study Buddies</h4>
+                    <div id="canvas-container3"></div>
+                </div>
+                <div class="canvas-card">
+                    <h4>⭐ Go Premium</h4>
+                    <div id="canvas-container4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DealBuddy Onboarding - Warm Discovery Algorithm
+        let params = {
+            seed: 42,
+            energy: 50,
+            particleCount: 80,
+            warmth: 70,
+            clustering: 60
+        };
+
+        let defaultParams = {...params};
+
+        // Color palettes for each onboarding screen
+        const dealColors = ['#F59E0B', '#F97316', '#FBBF24', '#EF4444'];
+        const saveColors = ['#14B8A6', '#06B6D4', '#22D3EE', '#34D399'];
+        const studyColors = ['#6366F1', '#8B5CF6', '#A78BFA', '#C4B5FD'];
+        const premiumColors = ['#F59E0B', '#F97316', '#FB7185', '#6366F1'];
+
+        let particles = [];
+        let time = 0;
+
+        // Particle class
+        class Particle {
+            constructor(x, y, colors, targetX, targetY) {
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.colors = colors;
+                this.size = random(8, 20);
+                this.speed = random(0.5, 2);
+                this.angle = random(TWO_PI);
+                this.wobble = random(0.02, 0.05);
+                this.alpha = random(150, 255);
+                this.pulseSpeed = random(0.02, 0.05);
+                this.colorIndex = floor(random(colors.length));
+            }
+
+            update() {
+                // Move toward target with wobble
+                let dx = this.targetX - this.x;
+                let dy = this.targetY - this.y;
+                let dist = sqrt(dx*dx + dy*dy);
+                
+                if (dist > 5) {
+                    this.x += (dx / dist) * this.speed * (params.energy / 50);
+                    this.y += (dy / dist) * this.speed * (params.energy / 50);
+                }
+                
+                // Add wobble
+                this.angle += this.wobble;
+                this.x += sin(this.angle) * 2;
+                this.y += cos(this.angle) * 2;
+                
+                // Pulse size
+                this.size = 8 + 12 * (0.5 + 0.5 * sin(time * this.pulseSpeed));
+            }
+
+            draw(p) {
+                p.noStroke();
+                let c = color(this.colors[this.colorIndex]);
+                c.setAlpha(this.alpha);
+                p.fill(c);
+                p.circle(this.x, this.y, this.size);
+                
+                // Glow effect
+                p.fill(this.colors[this.colorIndex]);
+                p.circle(this.x, this.y, this.size * 0.4);
+            }
+        }
+
+        // Initialize all four canvases
+        let canvases = [];
+        let setups = [];
+        let draws = [];
+
+        function setup() {
+            // Create four canvases
+            let canvas1 = createCanvas(500, 500);
+            canvas1.parent('canvas-container');
+            
+            let canvas2 = createCanvas(500, 500);
+            canvas2.parent('canvas-container2');
+            
+            let canvas3 = createCanvas(500, 500);
+            canvas3.parent('canvas-container3');
+            
+            let canvas4 = createCanvas(500, 500);
+            canvas4.parent('canvas-container4');
+
+            canvases = [canvas1, canvas2, canvas3, canvas4];
+            initializeSystem();
+        }
+
+        function initializeSystem() {
+            randomSeed(params.seed);
+            noiseSeed(params.seed);
+            time = 0;
+            
+            // Clear particles
+            particles = [];
+            
+            // Create particles for each canvas
+            for (let i = 0; i < 4; i++) {
+                createParticlesForCanvas(i);
+            }
+        }
+
+        function createParticlesForCanvas(canvasIndex) {
+            let colorSets = [dealColors, saveColors, studyColors, premiumColors];
+            let centerX = 250;
+            let centerY = 250;
+            
+            // Different layouts for each screen
+            let layouts = [
+                () => { // Discover - radial burst
+                    for (let j = 0; j < params.particleCount / 4; j++) {
+                        let angle = random(TWO_PI);
+                        let r = random(50, 180);
+                        let tx = centerX + cos(angle) * r;
+                        let ty = centerY + sin(angle) * r;
+                        let p = new Particle(
+                            random(width), random(height),
+                            colorSets[canvasIndex], tx, ty
+                        );
+                        particles.push({canvas: canvasIndex, particle: p});
+                    }
+                },
+                () => { // Save - flowing streams
+                    for (let j = 0; j < params.particleCount / 4; j++) {
+                        let tx = centerX + random(-100, 100);
+                        let ty = centerY + random(-150, 150);
+                        let p = new Particle(
+                            random(width), random(height),
+                            colorSets[canvasIndex], tx, ty
+                        );
+                        particles.push({canvas: canvasIndex, particle: p});
+                    }
+                },
+                () => { // Study - paired clusters
+                    let clusterCount = 3;
+                    for (let c = 0; c < clusterCount; c++) {
+                        let cx = centerX + random(-80, 80);
+                        let cy = centerY + random(-80, 80);
+                        for (let j = 0; j < (params.particleCount / 4) / clusterCount; j++) {
+                            let tx = cx + random(-40, 40);
+                            let ty = cy + random(-40, 40);
+                            let p = new Particle(
+                                random(width), random(height),
+                                colorSets[canvasIndex], tx, ty
+                            );
+                            particles.push({canvas: canvasIndex, particle: p});
+                        }
+                    }
+                },
+                () => { // Premium - starburst
+                    for (let j = 0; j < params.particleCount / 4; j++) {
+                        let angle = random(TWO_PI);
+                        let r = random(30, 160);
+                        let tx = centerX + cos(angle) * r;
+                        let ty = centerY + sin(angle) * r;
+                        let p = new Particle(
+                            random(width), random(height),
+                            colorSets[canvasIndex], tx, ty
+                        );
+                        particles.push({canvas: canvasIndex, particle: p});
+                    }
+                }
+            ];
+            
+            layouts[canvasIndex]();
+        }
+
+        function draw() {
+            time += 0.01;
+            
+            // Draw each canvas
+            for (let i = 0; i < 4; i++) {
+                push();
+                // Skip if not the active canvas context
+                if (i === 0) {
+                    background(250, 249, 245);
+                    drawBackgroundElements(i);
+                } else if (i === 1) {
+                    background(250, 249, 245);
+                    drawBackgroundElements(i);
+                } else if (i === 2) {
+                    background(250, 249, 245);
+                    drawBackgroundElements(i);
+                } else if (i === 3) {
+                    background(250, 249, 245);
+                    drawBackgroundElements(i);
+                }
+                
+                // Draw particles for this canvas
+                for (let p of particles) {
+                    if (p.canvas === i) {
+                        p.particle.update();
+                        p.particle.draw(window);
+                    }
+                }
+                pop();
+            }
+        }
+
+        // Custom draw for each canvas context
+        function drawBackgroundElements(canvasIndex) {
+            let centerX = 250;
+            let centerY = 250;
+            
+            // Warm gradient background based on warmth param
+            let warmthFactor = params.warmth / 100;
+            let bgWarmth = lerpColor(color(250, 249, 245), color(255, 248, 240), warmthFactor);
+            background(bgWarmth);
+            
+            // Draw central icon area
+            noStroke();
+            
+            if (canvasIndex === 0) {
+                // Discover - compass-like center
+                fill(245, 158, 11, 30);
+                circle(centerX, centerY, 120);
+                fill(249, 115, 22, 50);
+                circle(centerX, centerY, 80);
+                fill(251, 191, 36);
+                circle(centerX, centerY, 40);
+            } else if (canvasIndex === 1) {
+                // Save - piggy bank circle
+                fill(20, 184, 166, 30);
+                circle(centerX, centerY, 120);
+                fill(6, 182, 212, 50);
+                circle(centerX, centerY, 80);
+                fill(52, 211, 153);
+                circle(centerX, centerY, 40);
+            } else if (canvasIndex === 2) {
+                // Study - books
+                fill(99, 102, 241, 30);
+                circle(centerX, centerY, 120);
+                fill(139, 92, 246, 50);
+                circle(centerX, centerY, 80);
+                fill(167, 139, 250);
+                circle(centerX, centerY, 40);
+            } else if (canvasIndex === 3) {
+                // Premium - star
+                fill(245, 158, 11, 30);
+                circle(centerX, centerY, 140);
+                fill(249, 115, 22, 50);
+                drawStar(centerX, centerY, 20, 45, 5);
+                fill(251, 113, 133);
+                drawStar(centerX, centerY, 10, 25, 5);
+            }
+        }
+
+        function drawStar(x, y, radius1, radius2, npoints) {
+            let angle = TWO_PI / npoints;
+            let halfAngle = angle / 2.0;
+            beginShape();
+            for (let a = 0; a < TWO_PI; a += angle) {
+                let sx = x + cos(a) * radius2;
+                let sy = y + sin(a) * radius2;
+                vertex(sx, sy);
+                sx = x + cos(a + halfAngle) * radius1;
+                sy = y + sin(a + halfAngle) * radius1;
+                vertex(sx, sy);
+            }
+            endShape(CLOSE);
+        }
+
+        function updateParam(paramName, value) {
+            params[paramName] = parseFloat(value);
+            document.getElementById(paramName + '-value').textContent = value;
+            initializeSystem();
+        }
+
+        function updateSeedDisplay() {
+            document.getElementById('seed-input').value = params.seed;
+        }
+
+        function updateSeed() {
+            let input = document.getElementById('seed-input');
+            let newSeed = parseInt(input.value);
+            if (newSeed && newSeed > 0) {
+                params.seed = newSeed;
+                initializeSystem();
+            } else {
+                updateSeedDisplay();
+            }
+        }
+
+        function previousSeed() {
+            params.seed = Math.max(1, params.seed - 1);
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function nextSeed() {
+            params.seed = params.seed + 1;
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function randomSeedAndUpdate() {
+            params.seed = Math.floor(Math.random() * 999999) + 1;
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function resetParameters() {
+            params = {...defaultParams};
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        window.addEventListener('load', function() {
+            updateSeedDisplay();
+        });
+    </script>
+</body>
+</html>
