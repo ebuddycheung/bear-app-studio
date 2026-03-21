@@ -4,7 +4,7 @@
 
 BACKUP_DATE=$(date +%Y-%m-%d)
 BACKUP_DIR=~/.openclaw/backup-temp
-REPO_DIR=~/.openclaw/workspace/bear-app-studio/openclaw-backup
+REPO_DIR=~/.openclaw/workspace/share-folder-backup
 CONFIG_FILE=~/.openclaw/openclaw.json
 
 echo "=== OpenClaw Backup Started: $BACKUP_DATE ==="
