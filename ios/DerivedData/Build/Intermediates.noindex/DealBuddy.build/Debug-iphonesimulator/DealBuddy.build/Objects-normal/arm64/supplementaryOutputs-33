@@ -1,0 +1,30 @@
+{
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DealBuddy/Extensions/Color+Hex.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/Color+Hex.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/Color+Hex.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/Color+Hex.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/Color+Hex.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/Color+Hex.swiftdeps"
+  },
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DealBuddy/ViewModels/ChatViewModel.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatViewModel.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatViewModel.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatViewModel.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatViewModel.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatViewModel.swiftdeps"
+  },
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DealBuddy/Views/ChatView.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatView.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatView.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatView.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatView.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ChatView.swiftdeps"
+  },
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DealBuddy/Views/ContentView.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ContentView.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/DealBuddy.build/Debug-iphonesimulator/DealBuddy.build/Objects-normal/arm64/ContentView.swiftdeps"
+  }
+}

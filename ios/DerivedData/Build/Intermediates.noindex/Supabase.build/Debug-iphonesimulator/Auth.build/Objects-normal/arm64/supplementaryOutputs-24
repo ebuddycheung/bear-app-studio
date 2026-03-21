@@ -1,0 +1,23 @@
+{
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthAdmin.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdmin.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdmin.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdmin.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdmin.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdmin.swiftdeps"
+  },
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthAdminOAuth.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdminOAuth.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdminOAuth.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdminOAuth.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdminOAuth.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthAdminOAuth.swiftdeps"
+  },
+  "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthClient.swift" : {
+    "const-values" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthClient.swiftconstvalues",
+    "dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthClient.d",
+    "diagnostics" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthClient.dia",
+    "object" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthClient.o",
+    "swift-dependencies" : "/Users/ebuddycheung/.openclaw/workspace/bear-app-studio/ios/DerivedData/Build/Intermediates.noindex/Supabase.build/Debug-iphonesimulator/Auth.build/Objects-normal/arm64/AuthClient.swiftdeps"
+  }
+}
