@@ -10,6 +10,9 @@ final class DiscoverViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var selectedCategory: DealCategory?
     
+    // Store unfiltered deals to avoid compounding filters
+    private var allDeals: [Deal] = []
+    
     init() {
         Task {
             await loadData()
@@ -22,7 +25,7 @@ final class DiscoverViewModel: ObservableObject {
         
         do {
             // Fetch deals from Supabase
-            let dealsResponse = try await SupabaseService.shared.client.database
+            let dealsResponse = try await SupabaseService.shared.client
                 .from("deals")
                 .select()
                 .order("created_at", ascending: false)
@@ -35,11 +38,12 @@ final class DiscoverViewModel: ObservableObject {
             if fetchedDeals.isEmpty {
                 loadMockData()
             } else {
+                allDeals = fetchedDeals
                 deals = fetchedDeals
             }
             
             // Fetch study spots
-            let spotsResponse = try await SupabaseService.shared.client.database
+            let spotsResponse = try await SupabaseService.shared.client
                 .from("study_spots")
                 .select()
                 .execute()
@@ -52,7 +56,7 @@ final class DiscoverViewModel: ObservableObject {
             }
             
             // Fetch study partners
-            let partnersResponse = try await SupabaseService.shared.client.database
+            let partnersResponse = try await SupabaseService.shared.client
                 .from("study_partners")
                 .select()
                 .execute()
@@ -75,16 +79,16 @@ final class DiscoverViewModel: ObservableObject {
     func filterDeals(by category: DealCategory?) {
         selectedCategory = category
         if let category = category {
-            deals = deals.filter { $0.category == category }
+            // Always filter from the full unfiltered list to avoid compounding
+            deals = allDeals.filter { $0.category == category }
         } else {
-            // Reload from database or mock
-            Task {
-                await loadData()
-            }
+            // Show all deals
+            deals = allDeals
         }
     }
     
     private func loadMockData() {
+        allDeals = Deal.mockDeals
         deals = Deal.mockDeals
         partners = StudyPartner.mockPartners
         spots = StudySpot.mockSpots

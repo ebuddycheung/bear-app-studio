@@ -22,7 +22,7 @@ final class HomeViewModel: ObservableObject {
         
         do {
             // Fetch deals from Supabase
-            let response = try await SupabaseService.shared.client.database
+            let response = try await SupabaseService.shared.client
                 .from("deals")
                 .select()
                 .order("created_at", ascending: false)
