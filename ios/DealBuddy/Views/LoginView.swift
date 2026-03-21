@@ -14,13 +14,18 @@ struct LoginView: View {
                 Spacer()
                 
                 // Logo
-                VStack(spacing: 8) {
-                    Text("🐻")
-                        .font(.system(size: 64))
+                VStack(spacing: 12) {
+                    Image("AppIcon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 120, height: 120)
+                        .cornerRadius(24)
+                        .shadow(color: Color(hex: "FF6B35").opacity(0.3), radius: 10, x: 0, y: 5)
                     
                     Text("DealBuddy")
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "FF6B35"))
                     
                     Text("Save money, find study buddies")
                         .font(.subheadline)

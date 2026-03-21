@@ -8,64 +8,74 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Promoted Section
-                    if let promoted = viewModel.promotedDeal {
+                if viewModel.nearbyDeals.isEmpty && viewModel.promotedDeal == nil {
+                    // Empty State
+                    VStack(spacing: 20) {
+                        EmptyStateView(type: .deals) {
+                            showCreateDeal = true
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 400)
+                } else {
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Promoted Section
+                        if let promoted = viewModel.promotedDeal {
+                            VStack(alignment: .leading) {
+                                Text("🔥 Promoted")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.gray)
+                                
+                                PromotedDealCard(deal: promoted)
+                                    .onTapGesture {
+                                        navigationPath.append(promoted)
+                                    }
+                            }
+                        }
+                        
+                        // Friends Activity
                         VStack(alignment: .leading) {
-                            Text("🔥 Promoted")
+                            Text("👥 Friends Activity")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.gray)
                             
-                            PromotedDealCard(deal: promoted)
+                            VStack(spacing: 0) {
+                                ForEach(viewModel.recentActivity) { activity in
+                                    ActivityRow(name: activity.name, action: activity.action, initial: activity.initial)
+                                    if activity.id != viewModel.recentActivity.last?.id {
+                                        Divider()
+                                    }
+                                }
+                            }
+                            .background(Color.white)
+                            .cornerRadius(12)
+                        }
+                        
+                        // Nearby Deals
+                        VStack(alignment: .leading) {
+                            Text("📍 Nearby Deals")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
+                            
+                            ForEach(viewModel.nearbyDeals) { deal in
+                                DealCard(
+                                    title: "\(deal.category.icon) \(deal.title)",
+                                    originalPrice: formatPrice(deal.originalPrice),
+                                    discountedPrice: formatPrice(deal.discountedPrice),
+                                    discount: deal.discountPercentage.map { "-\($0)%" } ?? "",
+                                    distance: "0.5km",
+                                    expiry: formatExpiry(deal.expiresAt)
+                                )
                                 .onTapGesture {
-                                    navigationPath.append(promoted)
-                                }
-                        }
-                    }
-                    
-                    // Friends Activity
-                    VStack(alignment: .leading) {
-                        Text("👥 Friends Activity")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                        
-                        VStack(spacing: 0) {
-                            ForEach(viewModel.recentActivity) { activity in
-                                ActivityRow(name: activity.name, action: activity.action, initial: activity.initial)
-                                if activity.id != viewModel.recentActivity.last?.id {
-                                    Divider()
+                                    navigationPath.append(deal)
                                 }
                             }
                         }
-                        .background(Color.white)
-                        .cornerRadius(12)
                     }
-                    
-                    // Nearby Deals
-                    VStack(alignment: .leading) {
-                        Text("📍 Nearby Deals")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                        
-                        ForEach(viewModel.nearbyDeals) { deal in
-                            DealCard(
-                                title: "\(deal.category.icon) \(deal.title)",
-                                originalPrice: formatPrice(deal.originalPrice),
-                                discountedPrice: formatPrice(deal.discountedPrice),
-                                discount: deal.discountPercentage.map { "-\($0)%" } ?? "",
-                                distance: "0.5km",
-                                expiry: formatExpiry(deal.expiresAt)
-                            )
-                            .onTapGesture {
-                                navigationPath.append(deal)
-                            }
-                        }
-                    }
+                    .padding()
                 }
-                .padding()
             }
             .background(Color(hex: "F7F7F7"))
             .navigationTitle("🐻 DealBuddy")

@@ -87,14 +87,9 @@ struct FriendsListContent: View {
     
     var body: some View {
         if friends.isEmpty {
-            VStack(spacing: 12) {
-                Image(systemName: emptyIcon)
-                    .font(.system(size: 48))
-                Text(emptyMessage)
-                    .foregroundColor(.gray)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, 60)
+            EmptyStateView(type: .friends)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 40)
         } else {
             LazyVStack(spacing: 0) {
                 ForEach(friends) { friend in
