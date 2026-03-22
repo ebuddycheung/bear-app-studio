@@ -74,10 +74,10 @@ echo "$BACKUP_DATE" > "$REPO_DIR/last-backup.txt"
 # Git operations
 cd "$REPO_DIR"
 git add -A
-git commit -m "Backup: $BACKUP_DATE" 2>/dev/null
+git commit -m "Backup: $BACKUP_DATE"
 
-# Try to push (might fail if no remote, that's ok)
-git push origin main 2>/dev/null || echo "Note: No remote configured or push failed"
+# Push to GitHub (force push to overwrite remote with backup)
+git push --force origin main
 
 # Cleanup
 rm -rf "$BACKUP_DIR"
