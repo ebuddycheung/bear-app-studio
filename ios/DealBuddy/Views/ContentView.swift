@@ -5,12 +5,12 @@ struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notificationManager: NotificationManager
     @EnvironmentObject var deepLinkManager: DeepLinkManager
-    @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+    @State private var isOnboardingComplete = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
     
     var body: some View {
         Group {
-            if showOnboarding {
-                OnboardingView(isOnboardingComplete: $showOnboarding)
+            if !isOnboardingComplete {
+                OnboardingView(isOnboardingComplete: $isOnboardingComplete)
             } else if authViewModel.isAuthenticated {
                 MainTabView(isLoggedIn: $authViewModel.isAuthenticated)
             } else {
